@@ -18,7 +18,7 @@ Sharing:
 Each visitor gets separate browser-local demo data; publishing does not connect production services. Keep the assets folder alongside index.html.
 
 Feedback:
-Use the “Give feedback” link on the site to open the public GitHub feedback form. Do not submit passwords, private messages, personal contact details, or other sensitive information.
+Use the “Give feedback” link on the site to open the public GitHub feedback form (GitHub sign-in is required). Do not submit passwords, private messages, personal contact details, or other sensitive information.
 
 Public demo:
 https://feez101.github.io/wetalk_v1_prototype/
