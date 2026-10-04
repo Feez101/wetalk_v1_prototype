@@ -1,0 +1,1836 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>WeTalk V1 — Interactive Prototype</title>
+<meta name="description" content="Interactive WeTalk V1 homepage and dashboard prototype.">
+<style>
+:root{
+  --bg:#050814;--bg2:#08101e;--panel:#0b1322;--panel2:#101a2e;--line:rgba(255,255,255,.11);
+  --white:#f8fbff;--text:#e9f0ff;--muted:#91a1bd;--blue:#3478ff;--blue2:#67a0ff;--red:#ef3340;
+  --orange:#ff9f43;--green:#31d58b;--purple:#8c62ff;--shadow:0 28px 80px rgba(0,0,0,.42);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}
+button,input,textarea,select{font:inherit}
+button,a{touch-action:manipulation}
+a{text-decoration:none;color:inherit}
+.hidden{display:none!important}
+.app{min-height:100vh}
+.logo{display:flex;align-items:center;gap:10px;font-size:27px;font-weight:950;letter-spacing:-1px}
+.logo img{width:78px;height:60px;object-fit:contain;object-position:center}
+.logo .we{color:#6aa2ff}.logo .talk{color:#ff5862}
+.badge{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:rgba(255,255,255,.055);border-radius:999px;padding:7px 10px;font-size:11px;font-weight:800}
+.badge.green{color:#6be6a8;border-color:rgba(49,213,139,.25);background:rgba(49,213,139,.08)}
+.badge.orange{color:#ffbd78;border-color:rgba(255,159,67,.24);background:rgba(255,159,67,.08)}
+.btn{border:0;border-radius:12px;padding:13px 19px;font-weight:900;cursor:pointer;transition:.2s;display:inline-flex;justify-content:center;align-items:center;gap:8px}
+.btn:hover{transform:translateY(-2px)}
+.btn.white{background:#fff;color:#07111f}
+.btn.blue{background:linear-gradient(135deg,var(--blue),#285bd7);color:#fff;box-shadow:0 12px 30px rgba(52,120,255,.24)}
+.btn.red{background:linear-gradient(135deg,#ff5660,#d91427);color:#fff}
+.btn.ghost{background:rgba(255,255,255,.055);border:1px solid var(--line);color:#fff}
+.btn.small{padding:9px 12px;border-radius:9px;font-size:12px}
+.icon-btn{width:38px;height:38px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:#fff;border-radius:10px;display:grid;place-items:center;cursor:pointer}
+input,textarea,select{width:100%;background:#0c1526;border:1px solid var(--line);color:#fff;border-radius:11px;padding:12px;outline:none}
+input:focus,textarea:focus,select:focus{border-color:#4e87ff;box-shadow:0 0 0 3px rgba(52,120,255,.12)}
+label{display:block;color:#aab8ce;font-size:12px;font-weight:800;margin-top:13px}
+label span{display:block;margin-bottom:6px}
+.screen{min-height:100vh}
+
+/* HOME */
+.home{position:relative;overflow:hidden;background:
+ radial-gradient(circle at 8% 35%,rgba(52,120,255,.20),transparent 25%),
+ radial-gradient(circle at 86% 16%,rgba(140,98,255,.20),transparent 27%),
+ radial-gradient(circle at 76% 98%,rgba(239,51,64,.10),transparent 25%),
+ linear-gradient(180deg,#040712,#07101e)}
+.home:before{content:"";position:absolute;inset:0;opacity:.20;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:42px 42px;pointer-events:none}
+.home-wrap{position:relative;z-index:2;max-width:1280px;margin:auto;padding:24px 28px 70px}
+.home-header{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.home-actions{display:flex;gap:10px}
+.hero{min-height:78vh;display:grid;grid-template-columns:.9fr 1.1fr;align-items:center;gap:64px;padding:42px 0}
+.eyebrow{color:var(--orange);font-size:13px;font-weight:950;letter-spacing:.25em;text-transform:uppercase;margin-bottom:18px}
+.hero h1{font-size:clamp(48px,6vw,82px);line-height:.92;letter-spacing:-4px;text-transform:uppercase;margin:0}
+.hero h1 .blue{color:#77a8ff}.hero h1 .red{color:#ff5d66}
+.hero .lead{max-width:590px;color:#b5c3d9;font-size:17px;line-height:1.75;margin-top:26px}
+.hero-buttons{display:flex;flex-wrap:wrap;gap:12px;margin-top:29px}
+.quick{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:550px;margin-top:38px}
+.quick .q{border:1px solid var(--line);background:rgba(255,255,255,.045);border-radius:14px;padding:14px;backdrop-filter:blur(12px)}
+.q b{display:block;font-size:14px}.q span{display:block;color:#9fb1cd;font-size:11px;margin-top:4px}
+.preview-wrap{position:relative}
+.preview-glow{position:absolute;inset:-35px;background:rgba(52,120,255,.12);filter:blur(50px);border-radius:50%}
+.preview{position:relative;border:1px solid rgba(255,255,255,.14);background:rgba(8,16,30,.95);border-radius:30px;padding:16px;box-shadow:var(--shadow);animation:float 7s ease-in-out infinite}
+.preview-inner{background:#060b14;border:1px solid var(--line);border-radius:24px;padding:17px}
+.p-head{display:flex;align-items:center;justify-content:space-between}
+.p-brand{display:flex;gap:10px;align-items:center}.p-brand img{width:42px;height:42px;background:#fff;border-radius:12px;padding:3px}.p-brand small{display:block;color:#65738d;margin-top:2px}
+.p-community{margin-top:14px;padding:14px;border:1px solid rgba(82,133,255,.18);border-radius:17px;background:linear-gradient(90deg,rgba(20,46,95,.8),rgba(28,31,68,.78),rgba(74,23,76,.62))}
+.p-community .row{display:flex;gap:12px;align-items:center}.p-icon{width:55px;height:55px;border-radius:16px;background:linear-gradient(135deg,var(--blue),var(--purple));display:grid;place-items:center;font-weight:950}
+.p-community h3{margin:0}.p-community p{margin:4px 0 0;color:#8191ab;font-size:10px}
+.p-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:11px}.p-stat{border:1px solid var(--line);background:rgba(255,255,255,.03);border-radius:11px;padding:10px;text-align:center}.p-stat b{display:block;font-size:17px}.p-stat span{color:#64728a;font-size:8px;text-transform:uppercase}
+.p-chat{margin-top:11px;border:1px solid var(--line);background:#0a1220;border-radius:15px;padding:12px}.p-chat h4{margin:0}.p-msg{display:flex;gap:8px;margin-top:11px}.mini-avatar{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:9px;font-weight:900;background:#6e52ea}.p-msg:nth-child(3) .mini-avatar{background:#2f74ff}.p-msg p{font-size:9px;color:#c2cde0;margin:3px 0 0}
+.home-features{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:10px}.home-card{border:1px solid var(--line);background:rgba(255,255,255,.035);border-radius:16px;padding:18px}.home-card b{display:block;margin-top:12px}.home-card p{color:#8292ab;font-size:12px;line-height:1.6}
+
+/* AUTH */
+.auth-screen{display:grid;place-items:center;padding:28px;background:radial-gradient(circle at 15% 20%,rgba(52,120,255,.18),transparent 28%),radial-gradient(circle at 85% 80%,rgba(239,51,64,.12),transparent 25%),#050814}
+.auth-card{width:min(960px,100%);display:grid;grid-template-columns:.9fr 1.1fr;border:1px solid var(--line);background:#09111f;border-radius:26px;overflow:hidden;box-shadow:var(--shadow)}
+.auth-side{padding:40px;background:linear-gradient(145deg,rgba(52,120,255,.2),rgba(140,98,255,.12));display:flex;flex-direction:column;justify-content:space-between}
+.auth-side h2{font-size:36px;letter-spacing:-2px;margin:35px 0 12px}.auth-side p{color:#b1c0d6;line-height:1.7}.auth-points{display:grid;gap:10px;margin-top:25px}.auth-points div{border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:12px;padding:12px;font-size:12px}
+.auth-form{padding:40px}.tabs{display:flex;gap:8px;margin-bottom:18px}.tab{flex:1;border:1px solid var(--line);background:#0c1526;color:#9eacc1;border-radius:10px;padding:11px;font-weight:900;cursor:pointer}.tab.active{background:#fff;color:#07111f}
+.auth-form h3{font-size:26px;margin:6px 0}.auth-form .sub{color:#8393ad;font-size:13px;line-height:1.6}.auth-submit{width:100%;margin-top:19px}.form-note{font-size:10px;color:#65738b;line-height:1.5;margin-top:11px}
+
+
+/* ACCOUNT + FIRST COMMUNITY ONBOARDING */
+.onboarding-screen{
+  display:grid;place-items:center;padding:28px;
+  background:
+    radial-gradient(circle at 10% 15%,rgba(52,120,255,.20),transparent 28%),
+    radial-gradient(circle at 88% 82%,rgba(239,51,64,.12),transparent 24%),
+    #050814;
+}
+.onboarding-shell{
+  width:min(1040px,100%);min-height:650px;
+  border:1px solid var(--line);border-radius:28px;overflow:hidden;
+  background:#08111f;box-shadow:var(--shadow);
+  display:grid;grid-template-columns:320px 1fr;
+}
+.onboarding-side{
+  padding:38px;background:
+    radial-gradient(circle at 85% 12%,rgba(255,255,255,.08),transparent 24%),
+    linear-gradient(160deg,rgba(52,120,255,.24),rgba(140,98,255,.12));
+  display:flex;flex-direction:column;
+}
+.onboarding-side .logo{font-size:24px}
+.onboarding-side h2{font-size:34px;letter-spacing:-1.6px;line-height:1.08;margin:52px 0 12px}
+.onboarding-side p{color:#adbed6;line-height:1.65;font-size:13px}
+.onboard-steps{display:grid;gap:10px;margin-top:28px}
+.onboard-step{
+  display:grid;grid-template-columns:32px 1fr;gap:10px;align-items:center;
+  border:1px solid var(--line);background:rgba(255,255,255,.035);
+  border-radius:13px;padding:10px;color:#91a2bd;font-size:11px
+}
+.onboard-step i{
+  width:32px;height:32px;border-radius:10px;display:grid;place-items:center;
+  font-style:normal;background:#101d34;color:#7b9dd9;font-weight:950
+}
+.onboard-step.active{background:rgba(52,120,255,.12);border-color:rgba(94,143,255,.35);color:#fff}
+.onboard-step.active i,.onboard-step.done i{background:#246de8;color:#fff}
+.onboard-step.done{color:#8bdcb3}
+.onboarding-main{padding:42px clamp(24px,5vw,62px);display:flex;flex-direction:column}
+.onboard-progress{display:flex;gap:7px;margin-bottom:38px}
+.onboard-progress span{height:5px;flex:1;background:#17253a;border-radius:999px}
+.onboard-progress span.done,.onboard-progress span.active{background:linear-gradient(90deg,#3478ff,#7961ee)}
+.onboard-pane{display:none}
+.onboard-pane.active{display:block}
+.onboard-pane h3{font-size:30px;letter-spacing:-1px;margin:0 0 7px}
+.onboard-pane .sub{color:#8fa0ba;font-size:13px;line-height:1.6;margin:0 0 24px}
+.onboard-choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.onboard-choice{
+  border:1px solid var(--line);background:#0c1627;color:#fff;border-radius:17px;
+  padding:20px;text-align:left;cursor:pointer;min-height:165px;transition:.18s
+}
+.onboard-choice:hover{border-color:#558cff;background:#10203a}
+.onboard-choice .oc-icon{font-size:29px;margin-bottom:25px}
+.onboard-choice b{display:block;font-size:15px;margin-bottom:7px}
+.onboard-choice p{font-size:11px;color:#8fa0ba;line-height:1.55;margin:0}
+.onboard-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.onboard-form-grid .full{grid-column:1/-1}
+.onboard-types{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px}
+.onboard-type{
+  border:1px solid var(--line);background:#0c1627;color:#9dacbf;border-radius:11px;
+  padding:10px 8px;cursor:pointer;font-size:10px;font-weight:850
+}
+.onboard-type.active{background:#163462;border-color:#4e87ff;color:#fff}
+.onboard-actions{display:flex;gap:9px;justify-content:flex-end;margin-top:22px}
+.onboard-success{
+  text-align:center;padding:32px 0 12px
+}
+.onboard-success .success-mark{
+  width:76px;height:76px;border-radius:24px;margin:0 auto 22px;display:grid;place-items:center;
+  background:linear-gradient(145deg,#31d58b,#3478ff);font-size:34px;font-weight:950
+}
+.onboard-success .invite-ready{
+  margin:22px auto 0;max-width:430px;border:1px solid var(--line);
+  background:#0c1627;border-radius:15px;padding:16px;text-align:left
+}
+.onboard-success .invite-ready small{display:block;color:#8292aa;font-size:9px;text-transform:uppercase;letter-spacing:.12em;font-weight:900}
+.onboard-success .invite-ready strong{font-size:22px;letter-spacing:.14em;display:block;margin-top:5px}
+.auth-check-row{display:flex;gap:8px;align-items:flex-start;margin-top:12px;color:#7f8da4;font-size:10px;line-height:1.45}
+.auth-check-row input{width:auto;margin-top:2px}
+.auth-mini-row{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:11px;color:#7f8da4;font-size:10px}
+@media(max-width:800px){
+  .onboarding-screen{padding:0}
+  .onboarding-shell{min-height:100vh;border:0;border-radius:0;grid-template-columns:1fr}
+  .onboarding-side{display:none}
+  .onboarding-main{padding:28px 20px}
+  .onboard-choice-grid,.onboard-form-grid{grid-template-columns:1fr}
+  .onboard-form-grid .full{grid-column:auto}
+  .onboard-types{grid-template-columns:1fr 1fr}
+}
+
+
+/* WEAI FIRST-USE GUIDE */
+.weai-guide-screen{
+  display:grid;place-items:center;padding:28px;
+  background:
+    radial-gradient(circle at 12% 12%,rgba(52,120,255,.18),transparent 28%),
+    radial-gradient(circle at 88% 82%,rgba(146,78,255,.13),transparent 28%),
+    #050814;
+}
+.weai-guide-shell{
+  width:min(860px,100%);min-height:620px;background:#f7f9fc;color:#17243b;
+  border:1px solid #dce5f1;border-radius:28px;overflow:hidden;
+  box-shadow:0 30px 90px rgba(0,0,0,.35);display:flex;flex-direction:column;
+}
+.weai-guide-head{
+  display:flex;align-items:center;gap:13px;padding:17px 19px;
+  background:#fff;border-bottom:1px solid #e1e8f1;
+}
+.weai-guide-head img{width:52px;height:52px;border-radius:16px;object-fit:cover;box-shadow:0 8px 22px rgba(49,88,200,.18)}
+.weai-guide-head div{flex:1}
+.weai-guide-head b{display:block;font-size:16px}
+.weai-guide-head small{display:flex;align-items:center;gap:6px;color:#7d8ba0;margin-top:3px;font-size:10px}
+.weai-guide-online{width:7px;height:7px;border-radius:50%;background:#22ba75}
+.weai-guide-body{
+  flex:1;padding:24px;overflow:auto;background:
+    radial-gradient(circle at 8% 12%,rgba(53,117,255,.07),transparent 25%),
+    linear-gradient(180deg,#f8faff,#f3f6fb);
+}
+.weai-guide-intro{max-width:600px;margin:0 auto 16px;text-align:center}
+.weai-guide-intro h2{margin:0 0 6px;font-size:27px;letter-spacing:-.8px}
+.weai-guide-intro p{margin:0;color:#73839a;font-size:11px;line-height:1.55}
+.weai-guide-chat{max-width:660px;margin:0 auto;display:grid;gap:10px}
+.weai-guide-msg{display:flex;align-items:flex-end;gap:8px}
+.weai-guide-msg img{width:30px;height:30px;border-radius:9px;object-fit:cover;flex:none}
+.weai-guide-bubble{
+  background:#fff;border:1px solid #e0e7f0;border-radius:16px 16px 16px 5px;
+  padding:11px 13px;box-shadow:0 4px 12px rgba(21,46,89,.06);
+  font-size:11px;line-height:1.58;color:#2a3951;
+}
+.weai-guide-bubble b{color:#0e5edb}
+.weai-guide-quick{
+  max-width:660px;margin:16px auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px
+}
+.weai-guide-quick div{
+  border:1px solid #dde5ef;background:#fff;border-radius:12px;padding:10px;
+  font-size:9px;color:#67768c;line-height:1.45
+}
+.weai-guide-quick strong{display:block;color:#27364e;font-size:10px;margin-bottom:3px}
+.weai-guide-footer{
+  padding:14px 18px;background:#fff;border-top:1px solid #e1e8f1;
+  display:flex;gap:9px;justify-content:flex-end;align-items:center
+}
+.weai-guide-footer span{margin-right:auto;color:#8190a5;font-size:9px}
+.auth-create-hidden{display:none!important}
+.auth-create-hidden.ready{display:block!important}
+.auth-ready-note{display:none;color:#79e7b0;font-size:10px;margin-top:8px}
+.auth-ready-note.show{display:block}
+@media(max-width:700px){
+  .weai-guide-screen{padding:0}
+  .weai-guide-shell{width:100%;min-height:100vh;border:0;border-radius:0}
+  .weai-guide-body{padding:18px 14px}
+  .weai-guide-quick{grid-template-columns:1fr}
+}
+
+/* DASHBOARD */
+.dashboard{background:#f5f8fd;color:#101d37}
+.topbar{height:78px;background:#fff;border-bottom:1px solid #dfe7f2;display:flex;align-items:center;gap:18px;padding:0 20px;position:sticky;top:0;z-index:20}
+.topbar .logo{font-size:23px}.topbar .logo img{width:68px;height:54px}
+.search{flex:1;max-width:520px;margin:auto;position:relative}.search input{background:#f5f8fd;color:#16223a;border-color:#d9e3ef;padding-right:70px}.search kbd{position:absolute;right:10px;top:9px;border:1px solid #d8e1ec;background:#fff;border-radius:6px;padding:4px 7px;color:#72819a;font-size:10px}
+.top-user{display:flex;align-items:center;gap:9px}.avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#3178ff,#7958ea);color:#fff;font-size:11px;font-weight:900}.top-user small{display:block;color:#7c8aa0;font-size:10px}
+.dash-shell{height:calc(100vh - 78px);display:grid;grid-template-columns:255px 245px minmax(420px,1fr) 270px}
+.sidebar,.channels,.rightbar{background:#fff;border-right:1px solid #dfe7f2;overflow:auto}
+.sidebar{padding:18px 12px;display:flex;flex-direction:column}
+.dash-create{border:0;border-radius:11px;padding:13px;background:linear-gradient(135deg,#0757d9,#2d7ef0);color:#fff;font-weight:900;cursor:pointer}
+.side-label{font-size:9px;text-transform:uppercase;letter-spacing:.13em;color:#8896aa;font-weight:950;margin:22px 10px 8px}
+.navitem{border:0;background:transparent;border-radius:9px;padding:10px 11px;display:flex;gap:10px;align-items:center;color:#253550;width:100%;text-align:left;cursor:pointer;font-size:12px}.navitem:hover,.navitem.active{background:#eaf1ff;color:#0757d9}.navitem.active{font-weight:900}
+.communities-list{display:grid;gap:5px}.community-item{display:flex;align-items:center;gap:9px;padding:8px;border-radius:9px;cursor:pointer;font-size:11px}.community-item.active,.community-item:hover{background:#eef4ff}.c-dot{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#3478ff,#8c62ff);color:#fff;display:grid;place-items:center;font-size:9px;font-weight:900}
+.sidebar-user{margin-top:auto;border-top:1px solid #e1e8f1;padding-top:12px;display:flex;gap:8px;align-items:center}.sidebar-user small{display:block;color:#18a565}
+.channels{background:#fbfdff}.workspace{height:68px;padding:13px 16px;border-bottom:1px solid #e1e8f1;display:flex;align-items:center;justify-content:space-between}.workspace b{font-size:12px}.workspace small{display:block;color:#7e8ca2;font-size:9px;margin-top:2px}
+.channel-list{padding:12px}.channel-head{display:flex;align-items:center;justify-content:space-between;color:#8492a6;text-transform:uppercase;font-size:9px;font-weight:950;letter-spacing:.08em;padding:7px 7px}.channel{display:flex;align-items:center;gap:7px;padding:9px;border-radius:8px;font-size:11px;color:#44536d;cursor:pointer}.channel:hover,.channel.active{background:#eaf1ff;color:#0757d9}.channel.active{font-weight:900}
+.chat-pane{background:#fff;display:flex;flex-direction:column;min-width:0}.chat-header{height:68px;border-bottom:1px solid #e1e8f1;padding:12px 18px;display:flex;align-items:center;justify-content:space-between}.chat-header h2{font-size:15px;margin:0}.chat-header p{margin:3px 0 0;color:#7d8aa0;font-size:10px}.chat-tools{display:flex;gap:7px}.chat-tools .icon-btn{color:#40506d;background:#fff;border-color:#dfe7f2}
+.messages{flex:1;overflow:auto;padding:18px 22px}.message{display:grid;grid-template-columns:38px 1fr;gap:10px;margin:16px 0}.message .avatar{width:34px;height:34px}.message-head{display:flex;align-items:center;gap:7px}.message-head b{font-size:11px;color:#17243e}.message-head time{font-size:9px;color:#8a98ad}.message-body{font-size:12px;color:#2b3953;line-height:1.55;margin-top:3px}.reaction{display:inline-block;margin-top:6px;background:#f0f4fa;border-radius:999px;padding:4px 7px;font-size:9px}
+.file-card{display:inline-flex;align-items:center;gap:9px;margin-top:7px;border:1px solid #dce5f0;background:#f8faff;border-radius:10px;padding:9px 10px}.file-card strong{font-size:10px}.file-card span{font-size:9px;color:#7c8aa0;display:block}
+.composer-wrap{border-top:1px solid #e1e8f1;padding:12px 16px}.composer{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center}.composer input{background:#f8faff;color:#1a2943;border-color:#d8e2ef}.attach{width:40px;height:40px;border:1px solid #d8e2ef;border-radius:9px;background:#fff;display:grid;place-items:center;cursor:pointer}.send{height:40px;border:0;border-radius:9px;background:#0757d9;color:#fff;width:44px;font-weight:900;cursor:pointer}
+.rightbar{border-left:1px solid #dfe7f2;border-right:0;padding:13px;background:#fbfdff}.right-card{border:1px solid #e0e7f1;background:#fff;border-radius:13px;padding:13px;margin-bottom:11px}.right-card h3{font-size:11px;margin:0 0 10px}.member{display:grid;grid-template-columns:29px 1fr auto;gap:7px;align-items:center;margin:10px 0}.member .avatar{width:29px;height:29px;font-size:8px}.member b{font-size:9px}.member small{display:block;color:#18a565;font-size:8px}.role{font-size:8px;background:#eaf1ff;color:#0757d9;border-radius:999px;padding:4px 6px}
+.metric{display:flex;justify-content:space-between;border-bottom:1px solid #edf1f6;padding:8px 0;font-size:9px;color:#65738b}.metric:last-child{border:0}.metric b{color:#1d2d48}
+.launch-progress{height:7px;border-radius:999px;background:#e7edf5;overflow:hidden}.launch-progress span{display:block;height:100%;width:82%;background:linear-gradient(90deg,#0757d9,#31d58b)}
+.checklist{display:grid;gap:7px}.check{display:flex;align-items:flex-start;gap:7px;font-size:9px;color:#506079}.check i{font-style:normal;color:#18a565;font-weight:900}
+.mobile-menu{display:none}
+
+/* MODALS / PANELS */
+.modal{position:fixed;inset:0;background:rgba(3,8,18,.68);display:none;align-items:center;justify-content:center;padding:18px;z-index:80;backdrop-filter:blur(9px)}.modal.open{display:flex}
+.modal-box{width:min(560px,100%);max-height:90vh;overflow:auto;background:#09111f;border:1px solid var(--line);color:#fff;border-radius:20px;box-shadow:var(--shadow);padding:22px}.modal-box.large{width:min(760px,100%)}.modal-head{display:flex;align-items:center;justify-content:space-between}.modal-head h2{margin:0;font-size:19px}.close{width:35px;height:35px;border:1px solid var(--line);background:#101b2d;color:#fff;border-radius:9px;cursor:pointer}
+.modal-sub{color:#91a1bd;font-size:11px;line-height:1.6}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+.types{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px}.type-btn{border:1px solid var(--line);background:#0d1728;color:#c4cee0;border-radius:11px;padding:12px;text-align:left;cursor:pointer}.type-btn.active{border-color:#4b87ff;background:#10264d;color:#fff}
+.qr-wrap{display:grid;grid-template-columns:190px 1fr;gap:18px;align-items:center}.qr{width:190px;height:190px;background:#fff;border-radius:16px;padding:13px;display:grid;grid-template-columns:repeat(13,1fr);grid-template-rows:repeat(13,1fr);gap:2px}.qr span{background:#fff}.qr span.on{background:#081324;border-radius:1px}.invite-code{font-size:24px;font-weight:950;letter-spacing:.15em;color:#80adff;margin:7px 0}.copy-row{display:flex;gap:8px}.copy-row input{font-size:11px}
+.launch-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}.launch-card{border:1px solid var(--line);background:#0d1728;border-radius:13px;padding:13px}.launch-card h3{font-size:12px;margin:0 0 9px}.launch-card p{font-size:10px;color:#8e9eb7;line-height:1.5}.status-list{display:grid;gap:7px}.status-row{display:flex;justify-content:space-between;gap:12px;font-size:10px;border-bottom:1px solid rgba(255,255,255,.06);padding:6px 0}.status-row:last-child{border:0}.ok{color:#55dda0}.warn{color:#ffbc71}
+.toast{position:fixed;right:18px;bottom:18px;background:#081325;border:1px solid rgba(255,255,255,.14);color:#fff;border-radius:12px;padding:12px 15px;font-size:11px;box-shadow:0 16px 45px rgba(0,0,0,.35);z-index:100;transform:translateY(120px);opacity:0;transition:.25s}.toast.show{transform:translateY(0);opacity:1}
+
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@media(max-width:1050px){
+  .dash-shell{grid-template-columns:225px 220px minmax(360px,1fr)}.rightbar{display:none}
+}
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;text-align:center}.hero .lead{margin-left:auto;margin-right:auto}.hero-buttons{justify-content:center}.quick{margin-left:auto;margin-right:auto}.home-features{grid-template-columns:repeat(2,1fr)}
+  .auth-card{grid-template-columns:1fr}.auth-side{display:none}
+  .dash-shell{grid-template-columns:220px minmax(0,1fr)}.channels{display:none}.sidebar{position:fixed;left:-260px;top:78px;width:250px;height:calc(100vh - 78px);z-index:30;transition:.25s;box-shadow:10px 0 30px rgba(18,34,60,.14)}.sidebar.open{left:0}.mobile-menu{display:grid}.topbar .search{max-width:none}.top-user span:nth-child(2){display:none}
+}
+@media(max-width:620px){
+  .home-wrap{padding:18px 16px 45px}.home-header .logo{font-size:22px}.home-header .logo img{width:52px}.home-actions .ghost{display:none}.hero{padding-top:55px;gap:35px}.hero h1{font-size:47px;letter-spacing:-2.5px}.hero .lead{font-size:15px}.quick{grid-template-columns:1fr}.home-features{grid-template-columns:1fr}
+  .auth-screen{padding:14px}.auth-form{padding:25px}
+  .topbar{padding:0 10px;gap:8px}.topbar .logo .word{display:none}.topbar .logo img{width:45px}.search kbd{display:none}.chat-header{padding:10px}.messages{padding:13px}.composer-wrap{padding:9px}.dash-shell{grid-template-columns:1fr}.chat-tools .hide-sm{display:none}
+  .qr-wrap,.launch-grid{grid-template-columns:1fr}.qr{margin:auto}.modal-box{padding:17px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* LONG-FORM HOMEPAGE */
+.section-wrap{max-width:1280px;margin:0 auto;padding:88px 28px;position:relative;z-index:2}
+.section-head{max-width:760px;margin:0 auto 42px;text-align:center}
+.section-kicker{font-size:11px;font-weight:950;letter-spacing:.20em;text-transform:uppercase;color:#79aaff}
+.section-head h2{font-size:clamp(34px,4.2vw,56px);line-height:1.02;letter-spacing:-2.6px;margin:12px 0 14px}
+.section-head p{color:#99abc5;line-height:1.75;margin:0}
+.audience-strip{border-block:1px solid var(--line);background:rgba(255,255,255,.025)}
+.audience-row{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.audience-item{text-align:center;padding:18px 10px;border-right:1px solid var(--line);font-weight:850;font-size:12px;color:#cbd6e8}
+.audience-item:last-child{border-right:0}
+.big-feature-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.big-feature{border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.025));border-radius:18px;padding:20px;min-height:190px}
+.big-feature .fi{width:45px;height:45px;border-radius:13px;background:linear-gradient(135deg,#2e75ff,#7e5cff);display:grid;place-items:center;font-size:19px}
+.big-feature:nth-child(2n) .fi{background:linear-gradient(135deg,#ff4f5b,#cc1730)}
+.big-feature:nth-child(3n) .fi{background:linear-gradient(135deg,#24c494,#0c7f6f)}
+.big-feature h3{margin:17px 0 7px;font-size:16px}.big-feature p{margin:0;color:#8ea0bb;font-size:12px;line-height:1.65}
+.feature-note{margin-top:16px;border:1px solid rgba(71,126,255,.20);background:rgba(52,120,255,.08);border-radius:14px;padding:14px 16px;color:#b8c9e5;font-size:12px}
+.feature-note b{color:#77a8ff}
+.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.step-card{position:relative;border:1px solid var(--line);background:#09111f;border-radius:19px;padding:24px;min-height:210px}
+.step-no{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:#102c5f;color:#79aaff;font-weight:950}
+.step-card h3{margin:18px 0 8px}.step-card p{color:#8fa0b9;font-size:12px;line-height:1.7}
+.usecase-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.usecase{border:1px solid var(--line);background:#09111f;border-radius:18px;padding:20px}
+.usecase-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.usecase-icon{width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,.06);display:grid;place-items:center;font-size:20px}
+.usecase h3{margin:16px 0 6px}.usecase p{color:#8d9db7;font-size:12px;line-height:1.65}
+.usecase ul{margin:12px 0 0;padding-left:18px;color:#aebdd1;font-size:11px;line-height:1.8}
+.ai-band{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:center;border:1px solid rgba(140,98,255,.25);background:linear-gradient(135deg,rgba(61,54,130,.28),rgba(14,23,42,.9));border-radius:24px;padding:30px;overflow:hidden}
+.ai-copy h2{font-size:clamp(32px,4vw,50px);line-height:1.02;letter-spacing:-2px;margin:10px 0 14px}.ai-copy p{color:#aab7ca;line-height:1.7}
+.ai-demo{border:1px solid var(--line);background:#07101d;border-radius:18px;padding:17px}
+.ai-demo-head{display:flex;justify-content:space-between;align-items:center}.ai-demo-head b{font-size:13px}
+.ai-bubble{margin-top:12px;border-radius:13px;padding:12px 14px;font-size:11px;line-height:1.6}
+.ai-bubble.user{background:#12315f;color:#dbe9ff;margin-left:14%}
+.ai-bubble.bot{background:#111b2d;color:#c9d4e4;margin-right:8%}
+.security-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:center}
+.security-list{display:grid;gap:11px}.security-item{border:1px solid var(--line);background:rgba(255,255,255,.035);border-radius:15px;padding:15px}
+.security-item b{display:block}.security-item span{display:block;color:#8fa0b9;font-size:11px;line-height:1.6;margin-top:4px}
+.local-card{border:1px solid rgba(49,213,139,.20);background:linear-gradient(135deg,rgba(49,213,139,.09),rgba(8,18,31,.8));border-radius:22px;padding:26px}
+.local-card h3{font-size:27px;margin:12px 0}.local-card p{color:#9fb3c9;line-height:1.7}
+.roadmap-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.roadmap{border:1px solid var(--line);background:#09111f;border-radius:16px;padding:18px}
+.roadmap small{color:#6d7d96;font-weight:900}.roadmap h3{margin:9px 0}.roadmap p{font-size:11px;line-height:1.6;color:#8fa0b9}.roadmap.current{border-color:rgba(52,120,255,.45);box-shadow:inset 0 0 0 1px rgba(52,120,255,.12)}
+.faq{max-width:900px;margin:auto;display:grid;gap:10px}.faq details{border:1px solid var(--line);background:#09111f;border-radius:14px;padding:15px 17px}.faq summary{cursor:pointer;font-weight:850}.faq p{color:#91a1b9;font-size:12px;line-height:1.7}
+.final-cta{max-width:1100px;margin:0 auto;border:1px solid rgba(52,120,255,.22);background:radial-gradient(circle at 15% 20%,rgba(52,120,255,.18),transparent 28%),radial-gradient(circle at 85% 80%,rgba(239,51,64,.12),transparent 25%),#09111f;border-radius:28px;padding:46px 28px;text-align:center}
+.final-cta h2{font-size:clamp(36px,5vw,62px);letter-spacing:-3px;line-height:1;margin:0 0 15px}.final-cta p{color:#9fadc2;max-width:670px;margin:0 auto 24px;line-height:1.7}
+.home-footer{border-top:1px solid var(--line);margin-top:84px;padding:32px 0 10px;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;color:#6f7e95;font-size:11px}
+.footer-links{display:flex;gap:18px;flex-wrap:wrap}.footer-links a:hover{color:#fff}
+@media(max-width:1000px){
+ .big-feature-grid{grid-template-columns:repeat(2,1fr)}.usecase-grid{grid-template-columns:1fr 1fr}.roadmap-grid{grid-template-columns:1fr 1fr}.ai-band,.security-grid{grid-template-columns:1fr}.audience-row{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:650px){
+ .section-wrap{padding:66px 16px}.steps-grid,.usecase-grid,.big-feature-grid,.roadmap-grid{grid-template-columns:1fr}.audience-row{grid-template-columns:1fr 1fr}.audience-item{border-right:0;border-bottom:1px solid var(--line)}.home-footer{grid-template-columns:1fr}.final-cta{padding:36px 18px}
+}
+
+
+/* Compact spacing + floating motion */
+.home-wrap{padding-bottom:54px}
+.hero{min-height:70vh;padding:32px 0 40px;gap:54px}
+.hero .lead{margin-top:20px}
+.hero-buttons{margin-top:24px}
+.quick{margin-top:28px}
+.section-wrap{padding-top:64px;padding-bottom:64px}
+.section-head{margin-bottom:32px}
+.section-head h2{margin-top:10px;margin-bottom:11px}
+.big-feature{min-height:168px;padding:18px}
+.step-card{min-height:185px;padding:20px}
+.usecase{padding:18px}
+.ai-band{padding:26px}
+.security-item{padding:13px}
+.local-card{padding:22px}
+.roadmap{padding:16px}
+.final-cta{padding-top:38px;padding-bottom:38px}
+.home-footer{margin-top:58px;padding-top:26px}
+
+/* Gentle floating animations */
+@keyframes floatSoft{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-6px)}
+}
+@keyframes floatSoftAlt{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-4px)}
+}
+.home-card,
+.big-feature,
+.step-card,
+.usecase,
+.roadmap,
+.ai-demo,
+.local-card{
+  animation:floatSoft 6.5s ease-in-out infinite;
+  will-change:transform;
+}
+.home-card:nth-child(2n),
+.big-feature:nth-child(2n),
+.step-card:nth-child(2n),
+.usecase:nth-child(2n),
+.roadmap:nth-child(2n){
+  animation-name:floatSoftAlt;
+  animation-delay:.7s;
+}
+.home-card:nth-child(3n),
+.big-feature:nth-child(3n),
+.step-card:nth-child(3n),
+.usecase:nth-child(3n),
+.roadmap:nth-child(3n){
+  animation-delay:1.3s;
+}
+.home-card:hover,
+.big-feature:hover,
+.step-card:hover,
+.usecase:hover,
+.roadmap:hover,
+.ai-demo:hover,
+.local-card:hover{
+  animation-play-state:paused;
+}
+@media(max-width:650px){
+  .hero{min-height:auto;padding-top:44px;padding-bottom:30px}
+  .section-wrap{padding-top:52px;padding-bottom:52px}
+  .section-head{margin-bottom:26px}
+}
+@media(prefers-reduced-motion:reduce){
+  .home-card,.big-feature,.step-card,.usecase,.roadmap,.ai-demo,.local-card{animation:none!important}
+}
+
+
+.ai-mode-grid{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}
+.ai-mode-btn{border:1px solid var(--line);background:#0d1728;color:#b8c5d8;border-radius:999px;padding:8px 10px;font-size:10px;font-weight:850;cursor:pointer}
+.ai-mode-btn.active{background:#173568;border-color:#4e87ff;color:#fff}
+.ai-demo-context{margin-top:10px}
+.ai-demo-context textarea{min-height:78px}
+.ai-demo-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:7px}
+.ai-answer-actions{display:flex;gap:7px;justify-content:flex-end;margin-top:8px}
+
+
+/* =========================
+   WEAI in-chat assistant
+   ========================= */
+.weai-fab{
+  position:fixed;right:22px;bottom:22px;z-index:72;
+  width:66px;height:66px;border:0;border-radius:21px;padding:4px;
+  background:linear-gradient(135deg,#18a8ff,#3d6dff 42%,#a34dff 70%,#ff3b67);
+  box-shadow:0 16px 42px rgba(35,84,220,.34),0 0 0 5px rgba(255,255,255,.9);
+  cursor:pointer;transition:.22s;display:none;
+}
+#dashboardScreen:not(.hidden) ~ .weai-fab{display:block}
+.weai-fab:hover{transform:translateY(-4px) scale(1.03)}
+.weai-fab img{width:100%;height:100%;display:block;object-fit:cover;border-radius:17px}
+.weai-fab:before{
+  content:"";position:absolute;inset:-8px;border-radius:27px;
+  border:1px solid rgba(62,126,255,.25);animation:weaiPulse 2.8s ease-out infinite;
+}
+.weai-fab-label{
+  position:absolute;right:76px;top:50%;transform:translateY(-50%);
+  white-space:nowrap;background:#0a1323;color:#fff;border:1px solid rgba(255,255,255,.12);
+  border-radius:999px;padding:8px 11px;font-size:10px;font-weight:850;
+  box-shadow:0 10px 28px rgba(0,0,0,.2);opacity:0;pointer-events:none;transition:.18s;
+}
+.weai-fab:hover .weai-fab-label{opacity:1}
+@keyframes weaiPulse{0%{transform:scale(.94);opacity:.55}70%,100%{transform:scale(1.18);opacity:0}}
+
+.weai-chat-modal{
+  position:fixed;inset:0;z-index:90;background:rgba(3,8,18,.64);
+  backdrop-filter:blur(8px);display:none;align-items:flex-end;justify-content:flex-end;
+  padding:20px;
+}
+.weai-chat-modal.open{display:flex}
+.weai-chat{
+  width:min(440px,calc(100vw - 28px));height:min(720px,calc(100vh - 40px));
+  background:#f7f9fc;border:1px solid #dce5f1;border-radius:25px;overflow:hidden;
+  box-shadow:0 28px 90px rgba(4,18,50,.35);display:flex;flex-direction:column;
+  color:#17243b;
+}
+.weai-chat-head{
+  display:flex;align-items:center;gap:11px;padding:12px 14px;
+  background:#fff;border-bottom:1px solid #e3e9f2;
+}
+.weai-chat-head img{
+  width:44px;height:44px;object-fit:cover;border-radius:15px;
+  box-shadow:0 6px 18px rgba(42,91,221,.2)
+}
+.weai-chat-title{min-width:0;flex:1}
+.weai-chat-title b{display:block;font-size:14px}
+.weai-chat-title small{display:flex;align-items:center;gap:5px;color:#7e8da4;font-size:9px;margin-top:2px}
+.weai-online{width:7px;height:7px;background:#24bb74;border-radius:50%}
+.weai-close{
+  width:36px;height:36px;border:0;border-radius:50%;background:#f0f3f8;color:#596981;
+  cursor:pointer;font-size:16px
+}
+.weai-body{
+  flex:1;overflow:auto;padding:15px;background:
+    radial-gradient(circle at 10% 10%,rgba(59,122,255,.08),transparent 24%),
+    linear-gradient(180deg,#f8faff,#f2f5fa);
+}
+.weai-msg{display:flex;gap:8px;margin:10px 0;align-items:flex-end}
+.weai-msg.user{justify-content:flex-end}
+.weai-mini-logo{width:26px;height:26px;border-radius:9px;object-fit:cover;flex:none}
+.weai-bubble{
+  max-width:82%;padding:10px 12px;border-radius:15px;font-size:11px;line-height:1.55;
+  box-shadow:0 3px 10px rgba(20,43,82,.06);white-space:pre-wrap
+}
+.weai-msg.bot .weai-bubble{
+  background:#fff;border:1px solid #e1e7f0;border-bottom-left-radius:5px;color:#26354e
+}
+.weai-msg.user .weai-bubble{
+  background:linear-gradient(135deg,#1765dd,#2d83f6);color:#fff;border-bottom-right-radius:5px
+}
+.weai-welcome{font-size:11px;color:#5f6f87;line-height:1.55;margin:4px 2px 12px}
+.weai-chips{display:flex;gap:7px;flex-wrap:wrap;margin:4px 0 12px}
+.weai-chip{
+  border:1px solid #d9e3f0;background:#fff;color:#3f526d;border-radius:999px;
+  padding:8px 10px;font-size:9px;font-weight:850;cursor:pointer;transition:.18s
+}
+.weai-chip:hover,.weai-chip.active{border-color:#75a0ff;background:#edf3ff;color:#0757d9}
+.weai-context-box{
+  border:1px dashed #ccd8e7;background:#fff;border-radius:12px;padding:10px;margin:10px 0;
+  display:none
+}
+.weai-context-box.open{display:block}
+.weai-context-box label{margin:0 0 6px;color:#667690;font-size:9px}
+.weai-context-box textarea{
+  min-height:66px;background:#f8faff;color:#26354d;border:1px solid #d9e2ee;
+  border-radius:9px;font-size:10px
+}
+.weai-context-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.weai-context-actions button{
+  border:1px solid #dbe4ef;background:#f7f9fd;color:#53627a;border-radius:8px;
+  padding:6px 8px;font-size:8px;font-weight:800;cursor:pointer
+}
+.weai-composer{
+  background:#fff;border-top:1px solid #e3e9f2;padding:10px;
+}
+.weai-tools-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px}
+.weai-mode-label{font-size:9px;color:#75849b;font-weight:800}
+.weai-context-toggle{
+  border:0;background:#eef3fb;color:#4d5d75;border-radius:999px;padding:6px 9px;
+  font-size:8px;font-weight:850;cursor:pointer
+}
+.weai-input-row{
+  display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end;
+  border:1px solid #d8e2ef;background:#f8faff;border-radius:16px;padding:7px
+}
+.weai-input-row textarea{
+  min-height:42px;max-height:110px;resize:none;border:0;background:transparent;
+  color:#1f2e48;padding:7px;box-shadow:none
+}
+.weai-send{
+  width:40px;height:40px;border:0;border-radius:13px;color:#fff;cursor:pointer;font-weight:950;
+  background:linear-gradient(135deg,#1766dd,#5b60ef)
+}
+.weai-disclaimer{font-size:8px;color:#8a97aa;text-align:center;margin:7px 0 0}
+.weai-answer-actions{display:flex;gap:6px;margin:5px 0 0 34px}
+.weai-answer-actions button{
+  border:0;background:transparent;color:#61718a;font-size:8px;font-weight:800;cursor:pointer;padding:3px 5px
+}
+.weai-typing{display:inline-flex;gap:3px;align-items:center}
+.weai-typing i{width:5px;height:5px;background:#8c9bb0;border-radius:50%;animation:dotBounce 1.1s infinite ease-in-out}
+.weai-typing i:nth-child(2){animation-delay:.15s}.weai-typing i:nth-child(3){animation-delay:.3s}
+@keyframes dotBounce{0%,60%,100%{transform:translateY(0);opacity:.45}30%{transform:translateY(-4px);opacity:1}}
+
+.weai-inline-logo{width:20px;height:20px;border-radius:6px;object-fit:cover;vertical-align:middle;margin-right:6px}
+.ai-demo .weai-showcase-logo{width:58px;height:58px;border-radius:17px;object-fit:cover;box-shadow:0 10px 28px rgba(32,83,224,.25);margin-bottom:10px}
+
+@media(max-width:620px){
+  .weai-chat-modal{padding:0;align-items:stretch}
+  .weai-chat{width:100%;height:100%;max-height:none;border-radius:0;border:0}
+  .weai-fab{right:15px;bottom:15px;width:58px;height:58px;border-radius:18px}
+  .weai-fab img{border-radius:14px}
+}
+@media(prefers-reduced-motion:reduce){
+  .weai-fab:before,.weai-typing i{animation:none!important}
+}
+
+
+/* Hero updated after removing the opening preview box */
+.hero{
+  grid-template-columns:1fr !important;
+  max-width:920px;
+  margin:0 auto;
+  text-align:center;
+}
+.hero .lead{
+  margin-left:auto;
+  margin-right:auto;
+}
+.hero-buttons{
+  justify-content:center;
+}
+.quick{
+  margin-left:auto;
+  margin-right:auto;
+}
+
+
+/* Stronger floating animations */
+@keyframes floatNoticeable {
+  0%, 100% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+    box-shadow: 0 18px 40px rgba(0,0,0,.18);
+  }
+  25% {
+    transform: translateY(-10px) translateX(3px) rotate(.4deg);
+    box-shadow: 0 26px 48px rgba(0,0,0,.22);
+  }
+  50% {
+    transform: translateY(-18px) translateX(0) rotate(0deg);
+    box-shadow: 0 32px 56px rgba(0,0,0,.24);
+  }
+  75% {
+    transform: translateY(-8px) translateX(-3px) rotate(-.4deg);
+    box-shadow: 0 24px 46px rgba(0,0,0,.21);
+  }
+}
+
+@keyframes floatNoticeableAlt {
+  0%, 100% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+    box-shadow: 0 18px 40px rgba(0,0,0,.18);
+  }
+  20% {
+    transform: translateY(-7px) translateX(-4px) rotate(-.5deg);
+    box-shadow: 0 24px 44px rgba(0,0,0,.21);
+  }
+  55% {
+    transform: translateY(-15px) translateX(2px) rotate(.5deg);
+    box-shadow: 0 30px 52px rgba(0,0,0,.24);
+  }
+  80% {
+    transform: translateY(-6px) translateX(4px) rotate(0deg);
+    box-shadow: 0 22px 42px rgba(0,0,0,.20);
+  }
+}
+
+@keyframes floatPulseGlow {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    box-shadow: 0 18px 38px rgba(36,84,220,.18);
+  }
+  50% {
+    transform: translateY(-14px) scale(1.015);
+    box-shadow: 0 28px 54px rgba(36,84,220,.28);
+  }
+}
+
+.home-card,
+.big-feature,
+.step-card,
+.usecase,
+.roadmap,
+.ai-demo,
+.local-card,
+.final-cta {
+  animation: floatNoticeable 4.8s ease-in-out infinite !important;
+  will-change: transform, box-shadow;
+}
+
+.home-card:nth-child(2n),
+.big-feature:nth-child(2n),
+.step-card:nth-child(2n),
+.usecase:nth-child(2n),
+.roadmap:nth-child(2n) {
+  animation: floatNoticeableAlt 5.2s ease-in-out infinite !important;
+  animation-delay: .35s !important;
+}
+
+.home-card:nth-child(3n),
+.big-feature:nth-child(3n),
+.step-card:nth-child(3n),
+.usecase:nth-child(3n),
+.roadmap:nth-child(3n) {
+  animation-delay: .8s !important;
+}
+
+.ai-demo,
+.local-card,
+.final-cta {
+  animation: floatPulseGlow 4.6s ease-in-out infinite !important;
+}
+
+.home-card:hover,
+.big-feature:hover,
+.step-card:hover,
+.usecase:hover,
+.roadmap:hover,
+.ai-demo:hover,
+.local-card:hover,
+.final-cta:hover {
+  animation-play-state: paused !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-card,
+  .big-feature,
+  .step-card,
+  .usecase,
+  .roadmap,
+  .ai-demo,
+  .local-card,
+  .final-cta {
+    animation: none !important;
+  }
+}
+
+
+/* Float strictly in place: vertical movement only */
+@keyframes floatInPlace {
+  0%, 100% {
+    transform: translateY(0);
+    box-shadow: 0 18px 40px rgba(0,0,0,.18);
+  }
+  50% {
+    transform: translateY(-16px);
+    box-shadow: 0 30px 54px rgba(0,0,0,.24);
+  }
+}
+
+@keyframes floatInPlaceSoft {
+  0%, 100% {
+    transform: translateY(0);
+    box-shadow: 0 16px 36px rgba(0,0,0,.16);
+  }
+  50% {
+    transform: translateY(-11px);
+    box-shadow: 0 25px 46px rgba(0,0,0,.21);
+  }
+}
+
+.home-card,
+.big-feature,
+.step-card,
+.usecase,
+.roadmap,
+.ai-demo,
+.local-card,
+.final-cta {
+  animation: floatInPlace 4.8s ease-in-out infinite !important;
+  will-change: transform, box-shadow;
+}
+
+.home-card:nth-child(2n),
+.big-feature:nth-child(2n),
+.step-card:nth-child(2n),
+.usecase:nth-child(2n),
+.roadmap:nth-child(2n) {
+  animation: floatInPlaceSoft 5.2s ease-in-out infinite !important;
+  animation-delay: .35s !important;
+}
+
+.home-card:nth-child(3n),
+.big-feature:nth-child(3n),
+.step-card:nth-child(3n),
+.usecase:nth-child(3n),
+.roadmap:nth-child(3n) {
+  animation-delay: .8s !important;
+}
+
+.home-card:hover,
+.big-feature:hover,
+.step-card:hover,
+.usecase:hover,
+.roadmap:hover,
+.ai-demo:hover,
+.local-card:hover,
+.final-cta:hover {
+  animation-play-state: paused !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-card,
+  .big-feature,
+  .step-card,
+  .usecase,
+  .roadmap,
+  .ai-demo,
+  .local-card,
+  .final-cta {
+    animation: none !important;
+  }
+}
+
+
+/* Animations disabled */
+.preview,
+.home-card,
+.big-feature,
+.step-card,
+.usecase,
+.roadmap,
+.ai-demo,
+.local-card,
+.final-cta,
+.weai-fab:before,
+.weai-typing i {
+  animation: none !important;
+}
+
+.home-card,
+.big-feature,
+.step-card,
+.usecase,
+.roadmap,
+.ai-demo,
+.local-card,
+.final-cta,
+.preview,
+.weai-fab {
+  transform: none !important;
+}
+
+.weai-fab:hover,
+.btn:hover,
+.cta:hover,
+.pill:hover {
+  transform: none !important;
+}
+
+</style>
+
+<style id="v1-full-badge">.v1-full-badge{position:fixed;left:18px;bottom:18px;z-index:80;background:#07152d;color:#fff;border:1px solid #2c4776;border-radius:14px;padding:10px 12px;font:700 10px/1.4 Inter,Arial;box-shadow:0 12px 35px #0004}.v1-full-badge b{color:#79b6ff}.v1-full-badge small{display:block;color:#9fb0cb;font-weight:500}</style><style>
+.weai-home-guide{display:grid;gap:10px;margin:20px 0 22px;text-align:left}.weai-guide-step{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(255,255,255,.055)}.weai-guide-step>strong{display:grid;place-items:center;flex:0 0 30px;height:30px;border-radius:10px;background:linear-gradient(135deg,#2878ff,#ef3d57);color:#fff;font-size:13px}.weai-guide-step span{display:grid;gap:3px}.weai-guide-step b{font-size:14px;color:inherit}.weai-guide-step small{font-size:12px;line-height:1.45;color:inherit;opacity:.72}@media(max-width:700px){.weai-home-guide{gap:8px}.weai-guide-step{padding:11px 12px}}
+</style><!-- WEAI ORIGINAL DARK BLUE THEME -->
+<style>
+.weai-chat,.weai-guide-shell{background:#08101f!important;color:#eef4ff!important;border-color:#1b2a43!important;box-shadow:0 30px 90px rgba(0,0,0,.55)!important}.weai-chat-head,.weai-guide-head,.weai-composer,.weai-guide-footer{background:#0b1424!important;border-color:#1c2a40!important;color:#eef4ff!important}.weai-body,.weai-guide-body{background:radial-gradient(circle at 12% 10%,rgba(31,103,255,.12),transparent 27%),linear-gradient(180deg,#091221,#070d19)!important;color:#e8effb!important}.weai-chat-title small,.weai-guide-head small,.weai-guide-intro p,.weai-guide-footer span{color:#91a1ba!important}.weai-guide-bubble,.weai-guide-quick div,.weai-context-box{background:#101b2e!important;border-color:#22344f!important;color:#d9e3f3!important}.weai-guide-quick strong{color:#f2f6ff!important}.weai-bubble{background:#111d30!important;border-color:#253752!important;color:#e6edf8!important;box-shadow:0 5px 18px rgba(0,0,0,.2)!important}.weai-msg.user .weai-bubble{background:linear-gradient(135deg,#165bd2,#257be7)!important;color:#fff!important;border-color:transparent!important}.weai-close{background:#142038!important;color:#c9d5e8!important}.weai-chip,.weai-tool-btn{background:#101b2d!important;border-color:#263650!important;color:#b8c6da!important}.weai-chip.active,.weai-chip:hover,.weai-tool-btn:hover{background:#172944!important;border-color:#356bd4!important;color:#fff!important}.weai-composer textarea,.weai-composer input{background:#111b2c!important;border-color:#273650!important;color:#eef4ff!important}.weai-composer textarea::placeholder,.weai-composer input::placeholder{color:#7788a3!important}.weai-chat a,.weai-guide-shell a{color:#72a7ff!important}
+</style><!-- WEAI META-INSPIRED CHAT THEME -->
+<style>
+.weai-chat-modal{align-items:center!important;justify-content:center!important;padding:24px!important;background:rgba(2,7,16,.76)!important;backdrop-filter:blur(12px)!important}.weai-chat{width:min(820px,calc(100vw - 34px))!important;height:min(760px,calc(100vh - 42px))!important;border-radius:28px!important;background:#07101e!important;border:1px solid rgba(128,158,205,.2)!important;box-shadow:0 34px 110px rgba(0,0,0,.62)!important;color:#f2f6ff!important}.weai-chat-head{min-height:72px!important;padding:12px 18px!important;background:rgba(8,17,32,.96)!important;border-bottom:1px solid rgba(133,158,199,.14)!important}.weai-chat-head img{width:46px!important;height:46px!important;border-radius:50%!important;padding:2px!important;background:linear-gradient(135deg,#14b8ff,#4568ff 45%,#ab48ff 72%,#ff4778)!important;box-shadow:0 0 0 3px rgba(84,111,255,.13),0 0 28px rgba(69,103,255,.3)!important}.weai-chat-title b{font-size:15px!important;color:#fff!important}.weai-chat-title small{font-size:12px!important;color:#8fa2bf!important}.weai-online{background:#34d399!important;box-shadow:0 0 0 3px rgba(52,211,153,.12)!important}.weai-close{background:#111d31!important;color:#bdc9dc!important}.weai-close:hover{background:#1a2942!important;color:#fff!important}.weai-body{padding:22px clamp(16px,5vw,58px)!important;background:radial-gradient(circle at 50% -8%,rgba(70,94,255,.16),transparent 34%),linear-gradient(180deg,#08111f,#060c17)!important}.weai-msg{margin:14px 0!important;gap:10px!important}.weai-mini-logo{width:31px!important;height:31px!important;border-radius:50%!important;box-shadow:0 0 0 2px rgba(102,122,255,.22)!important}.weai-bubble{max-width:min(76%,560px)!important;padding:12px 15px!important;border-radius:19px!important;font-size:14px!important;line-height:1.55!important;background:#111d30!important;border:1px solid rgba(146,167,202,.14)!important;color:#e8eef9!important;box-shadow:none!important}.weai-msg.bot .weai-bubble{border-bottom-left-radius:6px!important}.weai-msg.user{justify-content:flex-end!important}.weai-msg.user .weai-bubble{background:#1b5fca!important;border:0!important;border-bottom-right-radius:6px!important;color:#fff!important}.weai-chips{padding:12px 18px 2px!important;background:#091321!important;border-top:1px solid rgba(133,158,199,.1)!important}.weai-chip{min-height:36px!important;padding:8px 13px!important;border-radius:999px!important;background:#101d31!important;border:1px solid #263a58!important;color:#b9c8dd!important;font-size:12px!important}.weai-chip:hover,.weai-chip.active{background:#172a46!important;border-color:#537cf0!important;color:#fff!important}.weai-context{background:#091321!important}.weai-context textarea,.weai-context input{background:#101b2d!important;border-color:#263851!important;color:#e8eef9!important}.weai-composer{padding:12px 16px 16px!important;background:#091321!important;border-top:0!important}.weai-composer>div,.weai-compose-row{border-radius:24px!important;background:#111d30!important;border:1px solid #293a55!important;box-shadow:0 8px 26px rgba(0,0,0,.2)!important}.weai-composer textarea,.weai-composer input{min-height:48px!important;background:transparent!important;border:0!important;color:#eef4ff!important;font-size:14px!important}.weai-send{width:40px!important;height:40px!important;border-radius:50%!important;background:linear-gradient(135deg,#2969e8,#7357ef)!important;color:#fff!important}.weai-chat:before{content:"";position:absolute;inset:0;pointer-events:none;border-radius:28px;background:linear-gradient(135deg,rgba(46,194,255,.09),transparent 22%,transparent 76%,rgba(170,67,255,.08))!important}.weai-chat{position:relative!important}@media(max-width:700px){.weai-chat-modal{padding:0!important}.weai-chat{width:100%!important;height:100vh!important;max-height:none!important;border:0!important;border-radius:0!important}.weai-chat:before{border-radius:0!important}.weai-body{padding:18px 13px!important}.weai-bubble{max-width:86%!important;font-size:14px!important}.weai-chat-head{padding-top:max(12px,env(safe-area-inset-top))!important}}
+</style><style id="weai-landing-style">
+.weai-chat{position:relative}
+.weai-chat.landing-active{width:min(1100px,calc(100vw - 48px));height:min(710px,calc(100vh - 38px));border:1px solid rgba(255,255,255,.1);border-radius:26px;background:#070b18;color:#f7f8ff;box-shadow:0 35px 110px rgba(0,0,0,.52)}
+.weai-chat.landing-active>.weai-chat-head,.weai-chat.landing-active>.weai-body,.weai-chat.landing-active>.weai-composer{display:none}
+.weai-landing{display:none;position:absolute;inset:0;overflow:auto;background:radial-gradient(circle at 14% 100%,rgba(30,91,218,.28),transparent 34%),radial-gradient(circle at 88% 50%,rgba(117,61,201,.22),transparent 38%),linear-gradient(120deg,#050b18 0%,#0d1331 48%,#1d1740 100%);padding:24px 30px 34px}
+.weai-chat.landing-active>.weai-landing{display:flex;flex-direction:column}
+.weai-landing-nav{display:flex;align-items:center;gap:22px;min-height:58px}
+.weai-landing-brand{display:flex;align-items:center;gap:12px;margin-right:auto;color:#fff;text-decoration:none;font-size:27px;font-weight:950;letter-spacing:-1px}
+.weai-landing-brand img{width:54px;height:54px;border-radius:50%;object-fit:cover;box-shadow:0 0 26px rgba(44,133,255,.42)}
+.weai-landing-brand span{background:linear-gradient(90deg,#61d9ff,#7894ff 55%,#cb63ff);-webkit-background-clip:text;color:transparent;text-decoration:underline;text-decoration-color:#89a5ff;text-underline-offset:5px}
+.weai-landing-links{display:flex;align-items:center;gap:28px}
+.weai-landing-links button{border:0;background:transparent;color:#9adfff;font-size:11px;font-weight:850;text-decoration:underline;text-underline-offset:3px;cursor:pointer}.weai-landing-links button:nth-child(2){color:#e4a2ff}.weai-landing-links button:nth-child(3){color:#68e5ff}
+.weai-landing-actions{display:flex;gap:10px;margin-left:auto}.weai-landing-actions button{border:1px solid rgba(255,255,255,.14);border-radius:13px;padding:14px 20px;color:#fff;background:rgba(255,255,255,.05);font-weight:900;cursor:pointer}.weai-landing-actions .primary{border:0;background:linear-gradient(135deg,#3478ff,#7659ef);box-shadow:0 12px 28px rgba(63,92,255,.3)}
+.weai-landing-close{position:absolute;right:14px;top:14px;width:36px;height:36px;border:0;border-radius:50%;background:#131b34;color:#fff;font-size:18px;cursor:pointer}
+.weai-landing-main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px 16px 8px}
+.weai-landing-kicker{margin:0 0 24px;color:#b17cff;font-size:12px;font-weight:950;letter-spacing:4px;text-transform:uppercase}
+.weai-landing h2{max-width:820px;margin:0;font-size:clamp(46px,6.5vw,82px);line-height:.91;letter-spacing:-4px;text-transform:uppercase;color:#f7f8ff}.weai-landing h2 .blue{color:#6c9dff}.weai-landing h2 .purple{color:#bd63f4}
+.weai-landing-copy{max-width:690px;margin:28px auto 26px;color:#c1c9de;font-size:16px;line-height:1.75}
+.weai-landing-cta{display:flex;gap:12px;justify-content:center}.weai-landing-cta button{border:1px solid rgba(255,255,255,.14);border-radius:13px;padding:15px 21px;color:#fff;background:rgba(255,255,255,.05);font-weight:900;cursor:pointer}.weai-landing-cta .primary{border:0;background:linear-gradient(135deg,#347eff,#745bed)}
+.weai-landing-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:min(620px,100%);margin-top:34px}.weai-landing-card{border:1px solid rgba(255,255,255,.13);border-radius:14px;padding:15px 12px;background:rgba(255,255,255,.04)}.weai-landing-card b{display:block;font-size:13px;margin-bottom:5px}.weai-landing-card span{font-size:10px;color:#9da9c6}
+@media(max-width:760px){.weai-chat.landing-active{width:100%;height:100%;max-height:none;border-radius:0}.weai-landing{padding:18px}.weai-landing-links{display:none}.weai-landing-actions button:first-child{display:none}.weai-landing-brand{font-size:22px}.weai-landing-brand img{width:44px;height:44px}.weai-landing-main{padding-top:48px}.weai-landing h2{font-size:clamp(39px,12vw,62px);letter-spacing:-2px}.weai-landing-copy{font-size:13px}.weai-landing-cards{grid-template-columns:1fr}.weai-landing-card{padding:11px}.weai-landing-close{right:8px;top:8px}}
+</style>
+<style id="wetalk-logo-fix">
+.logo{display:inline-flex!important;align-items:center!important;gap:10px!important;line-height:1!important;white-space:nowrap;overflow:visible!important;text-decoration:none}
+.logo .brand-mark{position:relative;display:inline-block;width:48px;height:40px;flex:0 0 48px}
+.logo .brand-mark::before,.logo .brand-mark::after{content:"";position:absolute;width:27px;height:23px;border:3px solid;border-radius:50%}
+.logo .brand-mark::before{left:2px;top:3px;border-color:#56a1ff;background:rgba(50,120,255,.12)}
+.logo .brand-mark::after{right:1px;bottom:2px;border-color:#ff5360;background:rgba(239,51,64,.1)}
+.logo .brand-mark span::before,.logo .brand-mark span::after{content:"";position:absolute;width:4px;height:4px;border-radius:50%;background:currentColor;box-shadow:7px 0 0 currentColor}
+.logo .brand-mark span::before{left:10px;top:14px;color:#71b3ff;z-index:2}
+.logo .brand-mark span::after{right:10px;bottom:12px;color:#ff6973;z-index:3}
+.logo .word{display:inline-flex;align-items:center;font-weight:950;letter-spacing:-1px;line-height:1}
+.home-header .logo{min-height:52px}
+.home-footer .logo .brand-mark{transform:scale(.84);transform-origin:left center;margin-right:-6px}
+@media(max-width:620px){.home-header .logo{font-size:22px!important}.logo .brand-mark{width:42px;height:36px;flex-basis:42px}}
+</style>
+</head>
+<body><a class="skip-link-proto" href="#homeScreen">Skip to main content</a>
+<div class="app">
+
+<!-- HOME -->
+<section id="homeScreen" class="screen home">
+  <div class="home-wrap">
+    <header class="home-header">
+      <a class="logo" href="#" onclick="showScreen('home');return false">
+        <img src="assets/wetalk-original-logo.png" alt="WeTalk logo"><span class="word"><span class="we">We</span><span class="talk">Talk</span></span>
+      </a>
+    </header>
+
+    <div class="hero">
+      <div>
+        <div class="eyebrow">Interactive prototype · demo data</div>
+        <h1>Every community.<br>One <span class="blue">conversation.</span><br><span class="red">No SIM.</span></h1>
+        <p class="lead">Create communities, organize channels, invite people with a link or code, share files and communicate from any modern browser—without requiring a phone number.</p>
+        <div class="hero-buttons">
+          <button class="btn blue" onclick="openAuth()">Create account (demo)</button>
+        </div>
+        <div class="quick">
+          <div class="q"><b>Fast</b><span>Live community messaging</span></div>
+          <div class="q"><b>No number</b><span>Username-first identity</span></div>
+          <div class="q"><b>Anywhere</b><span>Responsive web access</span></div>
+        </div>
+      </div>
+      </div>
+
+    <section class="home-features">
+      <article class="home-card"><div>💬</div><b>Live messaging</b><p>Send messages and see new conversations appear without leaving the channel.</p></article>
+      <article class="home-card"><div>▦</div><b>Invite & join</b><p>Share an invite link or code so people can join your community quickly.</p></article>
+      <article class="home-card"><div>📎</div><b>File sharing</b><p>Attach basic documents and images directly inside conversations.</p></article>
+      <article class="home-card"><div>🛡</div><b>Launch controls</b><p>Database, mobile, deployment and security readiness are tracked in the V1 dashboard.</p></article>
+    </section>
+
+
+    <section class="audience-strip">
+      <div class="section-wrap" style="padding-top:28px;padding-bottom:28px">
+        <div class="audience-row">
+          <div class="audience-item">🎓 Schools</div>
+          <div class="audience-item">🏢 Businesses</div>
+          <div class="audience-item">🤝 NGOs</div>
+          <div class="audience-item">🎮 Gaming Groups</div>
+          <div class="audience-item">🏘 Communities</div>
+          <div class="audience-item">📅 Events</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-wrap">
+      <div class="section-head">
+        <div class="section-kicker">Everything in one place</div>
+        <h2>Built for real communities, not just chat.</h2>
+        <p>WeTalk combines communication, organization and community management in one web-first experience.</p>
+      </div>
+      <div class="big-feature-grid">
+        <article class="big-feature"><div class="fi">💬</div><h3>Real-time messaging</h3><p>Keep conversations flowing across channels with fast updates and a focused chat experience.</p></article>
+        <article class="big-feature"><div class="fi">#</div><h3>Channels</h3><p>Separate announcements, resources, projects, topics and general chat without creating chaos.</p></article>
+        <article class="big-feature"><div class="fi">▦</div><h3>Invite & join</h3><p>Invite new members with a link, community code or QR-based joining flow.</p></article>
+        <article class="big-feature"><div class="fi">📎</div><h3>Files</h3><p>Share images, PDFs and common documents directly inside conversations.</p></article>
+        <article class="big-feature"><div class="fi">🛡</div><h3>Roles & permissions</h3><p>Owners, admins, moderators and members can have different levels of control.</p></article>
+        <article class="big-feature"><div class="fi">🔔</div><h3>Notifications</h3><p>Surface mentions, announcements and important community activity without overwhelming users.</p></article>
+        <article class="big-feature"><div class="fi">✦</div><h3>WeTalk AI</h3><p>Draft announcements, improve messages and summarize text a user chooses to send to the assistant.</p></article>
+        <article class="big-feature"><div class="fi">📱</div><h3>Responsive web app</h3><p>Use WeTalk from a laptop, tablet or phone without requiring a phone number at signup.</p></article>
+      </div>
+      <div class="feature-note"><b>V1 focus:</b> community creation, joining, channels, messaging, basic files, roles and a polished web experience. Voice/video, advanced AI and local-network features can expand later.</div>
+    </section>
+
+    <section class="section-wrap" style="padding-top:40px">
+      <div class="section-head">
+        <div class="section-kicker">Simple from the start</div>
+        <h2>From zero to active community in minutes.</h2>
+        <p>The onboarding flow is intentionally short so people can start communicating quickly.</p>
+      </div>
+      <div class="steps-grid">
+        <article class="step-card"><div class="step-no">1</div><h3>Create your account</h3><p>Choose your name, username, email and password. No phone number is required for the WeTalk V1 concept.</p></article>
+        <article class="step-card"><div class="step-no">2</div><h3>Create or join a community</h3><p>Start your own space or enter an invite code shared by an existing community.</p></article>
+        <article class="step-card"><div class="step-no">3</div><h3>Open a channel and talk</h3><p>Use #general immediately, create more channels, share files and invite additional members.</p></article>
+      </div>
+    </section>
+
+    <section class="section-wrap">
+      <div class="section-head">
+        <div class="section-kicker">Made for different groups</div>
+        <h2>One platform. Different ways to use it.</h2>
+      </div>
+      <div class="usecase-grid">
+        <article class="usecase"><div class="usecase-top"><div class="usecase-icon">🎓</div><span class="badge">Education</span></div><h3>Schools & universities</h3><p>Keep students and groups organized without mixing every conversation together.</p><ul><li>#announcements</li><li>#assignments</li><li>#department-chat</li><li>Shared resources</li></ul></article>
+        <article class="usecase"><div class="usecase-top"><div class="usecase-icon">🏢</div><span class="badge">Work</span></div><h3>Teams & businesses</h3><p>Separate projects, internal updates and team conversations while keeping members connected.</p><ul><li>#company-news</li><li>#project-alpha</li><li>#design</li><li>Role-based access</li></ul></article>
+        <article class="usecase"><div class="usecase-top"><div class="usecase-icon">🎮</div><span class="badge">Community</span></div><h3>Gaming & creator groups</h3><p>Build a recognizable community with channels for squads, events, creators and general discussion.</p><ul><li>#general</li><li>#tournaments</li><li>#clips</li><li>Member roles</li></ul></article>
+      </div>
+    </section>
+
+    <section class="section-wrap">
+      <div class="ai-band">
+        <div class="ai-copy">
+          <div class="section-kicker">WeTalk AI</div>
+          <h2>Meet WEAI—your helpful assistant inside WeTalk.</h2>
+          <p>WEAI helps you write announcements, improve messages, generate community ideas, and summarize only the text you choose to share. It supports your conversations—it never replaces them.</p>
+          <div class="weai-home-guide" aria-label="How to use WEAI">
+  <div class="weai-guide-step"><strong>1</strong><span><b>Open WEAI</b><small>Enter your dashboard and select WEAI Assistant.</small></span></div>
+  <div class="weai-guide-step"><strong>2</strong><span><b>Choose what you need</b><small>Ask a question, improve a message, create an announcement, summarize text, or generate an image.</small></span></div>
+  <div class="weai-guide-step"><strong>3</strong><span><b>Review the result</b><small>Copy it, improve it, or insert it into your WeTalk conversation.</small></span></div>
+</div><button class="btn blue" onclick="showScreen('dashboard');setTimeout(()=>openWeai(),120)">Open WEAI in the dashboard</button>
+        </div>
+        <div class="ai-demo">
+          <img class="weai-showcase-logo" src="assets/image-46d7fbd3c789.png" alt="WEAI logo">
+          <div class="ai-demo-head"><b>WEAI · WeTalk AI</b><span class="badge green">Ready</span></div>
+          <div class="ai-bubble user">Write a friendly reminder for tomorrow’s community meeting at 6 PM.</div>
+          <div class="ai-bubble bot">Hi everyone! 👋 Just a quick reminder that our community meeting is tomorrow at 6 PM. We hope to see you there!</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-wrap">
+      <div class="security-grid">
+        <div>
+          <div class="section-kicker">Privacy & control</div>
+          <h2 style="font-size:clamp(34px,4.2vw,55px);letter-spacing:-2.4px;line-height:1.03;margin:12px 0 14px">Your community should stay in control.</h2>
+          <p style="color:#9cacbf;line-height:1.75">WeTalk V1 is being structured around protected accounts, server-side secrets, validation and role-based permissions. Security claims will only be made when the underlying feature is actually implemented and tested.</p>
+        </div>
+        <div class="security-list">
+          <div class="security-item"><b>🔐 Server-side authentication</b><span>Passwords belong in the backend and are never stored as plain text in the production application.</span></div>
+          <div class="security-item"><b>🛡 Roles & permissions</b><span>Community owners and admins can control who manages channels and members.</span></div>
+          <div class="security-item"><b>🔑 Protected API keys</b><span>OpenAI credentials stay on the Laravel server, not inside browser JavaScript.</span></div>
+          <div class="security-item"><b>✅ Launch audit</b><span>Uploads, permissions, deployment settings and HTTPS should be checked before public release.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-wrap">
+      <div class="local-card">
+        <span class="badge green">📶 Future expansion</span>
+        <h3>Local-network communication</h3>
+        <p>The original WeTalk vision includes communication over shared Wi‑Fi or a local network. That remains a differentiating idea, but it should be treated as a later implementation milestone until the production networking behavior is fully built and tested.</p>
+      </div>
+    </section>
+
+    <section class="section-wrap">
+      <div class="section-head">
+        <div class="section-kicker">Product roadmap</div>
+        <h2>Start focused. Expand with purpose.</h2>
+      </div>
+      <div class="roadmap-grid">
+        <article class="roadmap current"><small>V1</small><h3>Core communities</h3><p>Accounts, communities, channels, text messages, invites, roles and basic files.</p></article>
+        <article class="roadmap"><small>V1.5</small><h3>Polish & reliability</h3><p>Notifications, better moderation, stronger mobile UX, search and production monitoring.</p></article>
+        <article class="roadmap"><small>V2</small><h3>Richer communication</h3><p>Voice notes, polls, events, better files and community discovery.</p></article>
+        <article class="roadmap"><small>V3</small><h3>Advanced platform</h3><p>Voice/video, deeper AI, translation, bots, plugins and enterprise controls.</p></article>
+      </div>
+    </section>
+
+    <section class="section-wrap">
+      <div class="section-head">
+        <div class="section-kicker">Questions</div>
+        <h2>What people will want to know.</h2>
+      </div>
+      <div class="faq">
+        <details><summary>Does WeTalk require a phone number?</summary><p>The V1 concept is designed around email + username identity, so a phone number is not required for the prototype flow.</p></details>
+        <details><summary>Is WeTalk only for schools?</summary><p>No. The product is being designed for schools, businesses, organizations, gaming groups, communities and other teams that need organized communication.</p></details>
+        <details><summary>Does WeTalk already support voice and video?</summary><p>Not in the V1 launch scope. Those are later features so the first release can focus on a reliable community messaging experience.</p></details>
+        <details><summary>Is the AI assistant private?</summary><p>The Laravel design keeps the OpenAI API key on the server. In the planned V1 flow, content is sent to AI only when the user deliberately asks the assistant to process it.</p></details>
+        <details><summary>Can I try the product without setting up Laravel?</summary><p>Yes. The standalone prototype includes an interactive homepage, registration flow and dashboard using browser-local demo state.</p></details>
+      </div>
+    </section>
+
+    <section class="section-wrap" style="padding-bottom:30px">
+      <div class="final-cta">
+        <div class="section-kicker">Start talking</div>
+        <h2>Build your community on WeTalk.</h2>
+        <p>Create an account, open your first community, invite people and start a conversation from one simple dashboard.</p>
+        <div class="hero-buttons" style="justify-content:center;margin-top:0">
+          <button class="btn blue" onclick="enterDemo()">Open demo dashboard</button>
+        </div>
+      </div>
+      <footer class="home-footer">
+        <div><a class="logo" href="#" onclick="showScreen('home');return false" style="font-size:20px"><img src="assets/wetalk-original-logo.png" alt="WeTalk logo"><span class="word"><span class="we">We</span><span class="talk">Talk</span></span></a><div style="margin-top:8px">Community communication, made simple.</div></div>
+        <div class="footer-links"><a href="#homeScreen">Home</a><a href="#" onclick="enterDemo();return false">Dashboard</a><a href="#" onclick="openAuth();return false">Create account (demo)</a></div>
+        <div style="grid-column:1/-1;text-align:center;margin-top:18px;padding-top:18px;border-top:1px solid rgba(255,255,255,.08);font-weight:900;color:#ff5d66;letter-spacing:.03em">© 2026 WeTalk. All rights reserved. &nbsp;·&nbsp; Developed by FEEZ Tech Limited</div>
+      </footer>
+    </section>
+
+  </div>
+</section>
+
+<!-- AUTH -->
+<section id="authScreen" class="screen auth-screen hidden">
+  <div class="auth-card">
+    <aside class="auth-side">
+      <div>
+        <a class="logo" href="#" onclick="showScreen('home');return false"><span><span class="we">We</span><span class="talk">Talk</span></span></a>
+        <h2>Welcome to<br>WeTalk.</h2>
+        <p>Enter your details to set up your WeTalk identity. When everything is filled correctly, the Create Account button will appear.</p>
+        <div class="auth-points">
+          <div>✓ No phone number required</div>
+          <div>✓ Username-based identity</div>
+          <div>✓ WEAI will guide you after setup</div>
+        </div>
+      </div>
+      <span class="badge orange">First-time setup</span>
+    </aside>
+
+    <main class="auth-form">
+      <div id="accountDetailsForm">
+        <h3>Enter your details</h3>
+        <p class="sub">We’ll use these details to create your WeTalk account.</p>
+
+        <label><span>Full name</span><input id="regName" autocomplete="name" placeholder="Your full name" oninput="checkAccountReady()"></label>
+        <label><span>Username</span><input id="regUsername" autocomplete="username" placeholder="e.g. musai" oninput="checkAccountReady()"></label>
+        <label><span>Email</span><input id="regEmail" type="email" autocomplete="email" placeholder="you@example.com" oninput="checkAccountReady()"></label>
+        <label><span>Password</span><input id="regPassword" type="password" autocomplete="new-password" placeholder="At least 8 characters" oninput="checkAccountReady()"></label>
+        <label><span>Confirm password</span><input id="regPasswordConfirm" type="password" autocomplete="new-password" placeholder="Enter it again" oninput="checkAccountReady()"></label>
+
+        <label class="auth-check-row">
+          <input id="regTerms" type="checkbox" onchange="checkAccountReady()">
+          <span>I agree to the Terms and Privacy Policy.</span>
+        </label>
+
+        <div id="authReadyNote" class="auth-ready-note">✓ Your details look ready.</div>
+        <button id="createAccountButton" class="btn blue auth-submit auth-create-hidden" onclick="registerUser()">Create account →</button>
+
+        <p class="form-note">Demo only: your profile and activity stay in this browser. This prototype does not create a real account. The separate Laravel build handles server-side authentication and password hashing.</p>
+        <button class="btn ghost small" style="margin-top:12px" onclick="showScreen('home')">← Back home</button>
+      </div>
+    </main>
+  </div>
+</section>
+
+<!-- WEAI FIRST-USE GUIDE -->
+<section id="weaiGuideScreen" class="screen weai-guide-screen hidden">
+  <div class="weai-guide-shell">
+    <header class="weai-guide-head">
+      <img src="assets/image-46d7fbd3c789.png" alt="WEAI logo">
+      <div>
+        <b>WEAI</b>
+        <small><span class="weai-guide-online"></span> Your WeTalk guide</small>
+      </div>
+      <span class="badge blue">Getting started</span>
+    </header>
+
+    <main class="weai-guide-body">
+      <div class="weai-guide-intro">
+        <h2 id="weaiWelcomeTitle">Welcome to WeTalk 👋</h2>
+        <p>WEAI will show you the important parts before you enter your first community.</p>
+      </div>
+
+      <div class="weai-guide-chat">
+        <div class="weai-guide-msg"><img src="assets/image-46d7fbd3c789.png" alt=""><div class="weai-guide-bubble"><b>1. Communities are your main spaces.</b><br>Create one for a school, team, organization, gaming group or any community — or join one with an invite code.</div></div>
+        <div class="weai-guide-msg"><img src="assets/image-46d7fbd3c789.png" alt=""><div class="weai-guide-bubble"><b>2. Channels organize conversations.</b><br>Use channels such as <b>#general</b>, <b>#announcements</b> or topic channels so messages stay easy to find.</div></div>
+        <div class="weai-guide-msg"><img src="assets/image-46d7fbd3c789.png" alt=""><div class="weai-guide-bubble"><b>3. Chat, share and reply.</b><br>Send messages, share approved files and images, search conversations, and use direct messages when you need a private one-to-one chat.</div></div>
+        <div class="weai-guide-msg"><img src="assets/image-46d7fbd3c789.png" alt=""><div class="weai-guide-bubble"><b>4. Invite people and manage roles.</b><br>Community owners can share invite codes or QR invites and use roles such as Owner, Admin, Moderator and Member.</div></div>
+        <div class="weai-guide-msg"><img src="assets/image-46d7fbd3c789.png" alt=""><div class="weai-guide-bubble"><b>5. I’m always available as WEAI.</b><br>You can ask me to improve a message, draft an announcement, summarize selected chat text, brainstorm community ideas or write a welcome message.</div></div>
+      </div>
+
+      <div class="weai-guide-quick">
+        <div><strong>Tip</strong>Use #general for everyday community conversation.</div>
+        <div><strong>Privacy</strong>Only AI context you explicitly choose should be sent to WEAI.</div>
+        <div><strong>Next</strong>Create your first community or join one with an invite.</div>
+      </div>
+    </main>
+
+    <footer class="weai-guide-footer">
+      <span>WEAI can also help again from inside the dashboard.</span>
+      <button class="btn blue" onclick="continueAfterWeaiGuide()">Continue →</button>
+    </footer>
+  </div>
+</section>
+
+
+<!-- FIRST-TIME ONBOARDING -->
+<section id="onboardingScreen" class="screen onboarding-screen hidden">
+  <div class="onboarding-shell">
+    <aside class="onboarding-side">
+      <a class="logo" href="#" onclick="showScreen('home');return false"><span class="word"><span class="we">We</span><span class="talk">Talk</span></span></a>
+      <div>
+        <h2>Set up your<br>first space.</h2>
+        <p>Your account is ready. Now choose whether you want to create a new community or join one with an invite.</p>
+        <div class="onboard-steps">
+          <div class="onboard-step done" id="obsAccount"><i>✓</i><span><b>Account</b><br>Your WeTalk identity</span></div>
+          <div class="onboard-step active" id="obsCommunity"><i>2</i><span><b>Community</b><br>Create or join</span></div>
+          <div class="onboard-step" id="obsReady"><i>3</i><span><b>Ready</b><br>Open #general</span></div>
+        </div>
+      </div>
+      <span class="badge green">No phone number required</span>
+    </aside>
+
+    <main class="onboarding-main">
+      <div class="onboard-progress"><span class="done"></span><span class="active" id="obProgress2"></span><span id="obProgress3"></span></div>
+
+      <section class="onboard-pane active" id="obChoice">
+        <h3>What do you want to do?</h3>
+        <p class="sub">You can create your own space or join an existing WeTalk community.</p>
+        <div class="onboard-choice-grid">
+          <button class="onboard-choice" type="button" onclick="showOnboardingPane('obCreate')">
+            <div class="oc-icon">＋</div><b>Create a community</b>
+            <p>Start a school, team, gaming group, organization or general community. WeTalk automatically creates #general.</p>
+          </button>
+          <button class="onboard-choice" type="button" onclick="showOnboardingPane('obJoin')">
+            <div class="oc-icon">▦</div><b>Join with an invite</b>
+            <p>Enter an invite code shared by a community owner or admin. You can try WETALK26 in this prototype.</p>
+          </button>
+        </div>
+        <div class="onboard-actions">
+          <button class="btn ghost small" type="button" onclick="showScreen('auth')">← Back</button>
+        </div>
+      </section>
+
+      <section class="onboard-pane" id="obCreate">
+        <h3>Create your first community</h3>
+        <p class="sub">Give your space a name. You can change the details and add more channels later.</p>
+        <div class="onboard-form-grid">
+          <label class="full"><span>Community name</span><input id="obCommunityName" placeholder="e.g. WeTalk Creators"></label>
+          <label class="full"><span>Description</span><textarea id="obCommunityDesc" rows="3" placeholder="What is this community for?"></textarea></label>
+        </div>
+        <label><span>Community type</span></label>
+        <div class="onboard-types">
+          <button class="onboard-type active" type="button" data-obtype="Community" onclick="selectOnboardType(this)">👥 Community</button>
+          <button class="onboard-type" type="button" data-obtype="School" onclick="selectOnboardType(this)">🎓 School</button>
+          <button class="onboard-type" type="button" data-obtype="Business" onclick="selectOnboardType(this)">🏢 Business</button>
+          <button class="onboard-type" type="button" data-obtype="Gaming" onclick="selectOnboardType(this)">🎮 Gaming</button>
+        </div>
+        <div class="onboard-actions">
+          <button class="btn ghost small" type="button" onclick="showOnboardingPane('obChoice')">← Back</button>
+          <button class="btn blue small" type="button" onclick="finishOnboardingCreate()">Create community →</button>
+        </div>
+      </section>
+
+      <section class="onboard-pane" id="obJoin">
+        <h3>Join a community</h3>
+        <p class="sub">Enter the invite code you received. Codes are case-insensitive.</p>
+        <label><span>Invite code</span><input id="obJoinCode" placeholder="WETALK26"></label>
+        <div style="margin-top:13px;border:1px solid var(--line);background:#0c1627;border-radius:13px;padding:13px;color:#8fa0ba;font-size:11px;line-height:1.55">
+          Prototype tip: use <b style="color:#fff">WETALK26</b> to test joining immediately.
+        </div>
+        <div class="onboard-actions">
+          <button class="btn ghost small" type="button" onclick="showOnboardingPane('obChoice')">← Back</button>
+          <button class="btn blue small" type="button" onclick="finishOnboardingJoin()">Join community →</button>
+        </div>
+      </section>
+
+      <section class="onboard-pane" id="obSuccess">
+        <div class="onboard-success">
+          <div class="success-mark">✓</div>
+          <h3 id="obSuccessTitle">Your community is ready</h3>
+          <p class="sub" id="obSuccessText">You can now open #general and start talking.</p>
+          <div class="invite-ready" id="obInviteReady">
+            <small>Your invite code</small>
+            <strong id="obInviteCode">WETALK26</strong>
+            <p style="color:#8fa0ba;font-size:10px;line-height:1.5;margin:8px 0 0">Share this with another person so they can join your community.</p>
+          </div>
+          <div class="onboard-actions" style="justify-content:center;margin-top:24px">
+            <button class="btn blue" type="button" onclick="finishOnboardingToDashboard()">Open #general →</button>
+            <button class="btn ghost" type="button" onclick="finishOnboardingAndInvite()" id="obInviteButton">Invite someone</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</section>
+
+<!-- DASHBOARD -->
+<section id="dashboardScreen" class="screen dashboard hidden">
+  <header class="topbar">
+    <button class="icon-btn mobile-menu" onclick="toggleSidebar()" aria-label="Open menu">☰</button>
+    <a class="logo" href="#" onclick="showScreen('home');return false"><img src="assets/wetalk-original-logo.png" alt="WeTalk logo"><span class="word"><span class="we">We</span><span class="talk">Talk</span></span></a>
+    <label class="search"><input id="searchBox" aria-label="Search messages" placeholder="Search messages…" oninput="searchMessages()"><kbd>Ctrl K</kbd></label>
+    <button class="icon-btn" onclick="openLaunch()" aria-label="Open launch readiness">✓</button>
+    <div class="top-user"><div class="avatar" id="topInitials">MI</div><span><b id="topName">Musa Ibrahim</b><small id="topUsername">@musai</small></span></div>
+  </header>
+
+  <div class="dash-shell">
+    <aside class="sidebar" id="sidebar">
+      <button class="dash-create" onclick="openModal('communityModal')">＋ Create Community</button>
+      <div class="side-label">Main</div>
+      <button class="navitem active">⌂ &nbsp; Home</button>
+      <button class="navitem" onclick="openModal('joinModal')">▦ &nbsp; Join Community</button>
+      <button class="navitem" onclick="openModal('qrModal')">⌁ &nbsp; Invite / QR</button>
+      <button class="navitem" onclick="openLaunch()">✓ &nbsp; Launch Readiness</button>
+      <button class="navitem" onclick="openWeai()"><img class="weai-inline-logo" src="assets/image-c4c6e229384e.png" alt=""> WEAI Assistant</button>
+      <div class="side-label">Communities</div>
+      <div id="communityList" class="communities-list"></div>
+      <div class="sidebar-user"><div class="avatar" id="sideInitials">MI</div><div><b id="sideName" style="font-size:10px">Musa Ibrahim</b><small>● Online</small></div></div>
+    </aside>
+
+    <aside class="channels">
+      <div class="workspace"><div><b id="workspaceName">Greenfield University</b><small>Community workspace</small></div>      <button class="icon-btn" style="color:#3f506e;background:#fff;border-color:#dfe7f2" onclick="openModal('channelModal')" aria-label="Create channel">＋</button></div>
+      <div class="channel-list">
+        <div class="channel-head"><span>Channels</span><button class="icon-btn" style="width:28px;height:28px;color:#596a85;background:#fff;border-color:#dfe7f2" onclick="openModal('channelModal')" aria-label="Create channel">＋</button></div>
+        <div id="channelList"></div>
+      </div>
+    </aside>
+
+    <main class="chat-pane">
+      <div class="chat-header">
+        <div><h2 id="channelTitle"># general</h2><p id="channelDesc">General discussion for everyone.</p></div>
+        <div class="chat-tools">
+          <button class="icon-btn hide-sm" onclick="openModal('qrModal')" title="Invite" aria-label="Invite people">⌁</button>
+          <button class="icon-btn hide-sm" onclick="openModal('launchModal')" title="Launch readiness" aria-label="Open launch readiness">✓</button>
+          <button class="icon-btn" onclick="openModal('channelModal')" title="New channel" aria-label="Create channel">＋</button>
+        </div>
+      </div>
+
+      <section id="messages" class="messages"></section>
+
+      <div class="composer-wrap">
+        <div class="composer" style="grid-template-columns:auto auto 1fr auto">
+          <label class="attach" title="Attach file">📎<input id="fileInput" type="file" hidden onchange="attachFile(event)"></label>
+          <button class="attach" type="button" title="Ask WEAI" onclick="openAiForComposer()"><img src="assets/image-46d7fbd3c789.png" alt="WEAI" style="width:24px;height:24px;border-radius:7px;object-fit:cover"></button>
+          <input id="messageInput" placeholder="Type a message…" maxlength="10000" onkeydown="if(event.key==='Enter')sendMessage()">
+          <button class="send" onclick="sendMessage()" aria-label="Send message">➤</button>
+        </div>
+      </div>
+    </main>
+
+    <aside class="rightbar">
+      <section class="right-card"><h3>Online Members (5)</h3>
+        <div class="member"><div class="avatar">MI</div><div><b>Musa Ibrahim</b><small>Online</small></div><span class="role">Admin</span></div>
+        <div class="member"><div class="avatar" style="background:linear-gradient(135deg,#ef3340,#ff7b72)">AB</div><div><b>Aisha Bello</b><small>Online</small></div><span class="role">Mod</span></div>
+        <div class="member"><div class="avatar" style="background:linear-gradient(135deg,#22a06b,#49c78f)">FA</div><div><b>Fatima Ali</b><small>Online</small></div><span class="role">Member</span></div>
+      </section>
+      <section class="right-card"><h3>V1 Launch Readiness</h3><div class="launch-progress"><span></span></div><div style="display:flex;justify-content:space-between;font-size:9px;color:#7a889e;margin-top:6px"><span>Prototype coverage</span><b>82%</b></div>
+        <div class="checklist" style="margin-top:10px">
+          <div class="check"><i>✓</i><span>Homepage + dashboard</span></div>
+          <div class="check"><i>✓</i><span>Authentication flow</span></div>
+          <div class="check"><i>✓</i><span>Communities + channels</span></div>
+          <div class="check"><i>✓</i><span>Messages + file interface</span></div>
+          <div class="check"><i>✓</i><span>Responsive layout</span></div>
+          <div class="check"><i>○</i><span>Live server hosting</span></div>
+          <div class="check"><i>○</i><span>Multi-user testing</span></div>
+          <div class="check"><i>○</i><span>WEAI production verification</span></div>
+        </div>
+      </section>
+      <section class="right-card"><h3>System</h3><div class="metric"><span>Database</span><b>SQLite ready</b></div><div class="metric"><span>Live refresh</span><b>Prototype active</b></div><div class="metric"><span>OpenAI</span><b>Laravel linked</b></div></section>
+    </aside>
+  </div>
+</section>
+
+<!-- Create community -->
+<div class="modal" id="communityModal"><div class="modal-box">
+  <div class="modal-head"><h2>Create community</h2><button class="close" onclick="closeModal('communityModal')">✕</button></div>
+  <p class="modal-sub">Create a school, team, organization, gaming group or general community.</p>
+  <label><span>Community name</span><input id="newCommunityName" placeholder="e.g. Greenfield University"></label>
+  <label><span>Description</span><textarea id="newCommunityDesc" rows="3" placeholder="What is this community for?"></textarea></label>
+  <div class="types"><button class="type-btn active" data-type="Community" onclick="selectType(this)">👥 Community</button><button class="type-btn" data-type="School" onclick="selectType(this)">🎓 School</button><button class="type-btn" data-type="Business" onclick="selectType(this)">🏢 Business</button><button class="type-btn" data-type="Gaming" onclick="selectType(this)">🎮 Gaming</button></div>
+  <div class="modal-actions"><button class="btn ghost small" onclick="closeModal('communityModal')">Cancel</button><button class="btn blue small" onclick="createCommunity()">Create community</button></div>
+</div></div>
+
+<!-- Create channel -->
+<div class="modal" id="channelModal"><div class="modal-box">
+  <div class="modal-head"><h2>Create channel</h2><button class="close" onclick="closeModal('channelModal')">✕</button></div>
+  <p class="modal-sub">Organize a community into focused conversations.</p>
+  <label><span>Channel name</span><input id="newChannelName" placeholder="announcements"></label>
+  <label><span>Description</span><input id="newChannelDesc" placeholder="Important community updates"></label>
+  <div class="modal-actions"><button class="btn ghost small" onclick="closeModal('channelModal')">Cancel</button><button class="btn blue small" onclick="createChannel()">Create channel</button></div>
+</div></div>
+
+<!-- Join -->
+<div class="modal" id="joinModal"><div class="modal-box">
+  <div class="modal-head"><h2>Join community</h2><button class="close" onclick="closeModal('joinModal')">✕</button></div>
+  <p class="modal-sub">Enter an invite code. Try <b>WETALK26</b> in this prototype.</p>
+  <label><span>Invite code</span><input id="joinCode" placeholder="WETALK26"></label>
+  <div class="modal-actions"><button class="btn ghost small" onclick="closeModal('joinModal')">Cancel</button><button class="btn blue small" onclick="joinCommunity()">Join</button></div>
+</div></div>
+
+<!-- QR -->
+<div class="modal" id="qrModal"><div class="modal-box large">
+  <div class="modal-head"><h2>Invite people</h2><button class="close" onclick="closeModal('qrModal')">✕</button></div>
+  <p class="modal-sub">Share the code or invite link. The QR image below is a visual prototype; the invite code itself works inside this demo.</p>
+  <div class="qr-wrap">
+    <div id="qrGrid" class="qr"></div>
+    <div><span class="badge green">Community invite</span><div class="invite-code" id="inviteCode">WETALK26</div><p class="modal-sub">Members can enter this code from the Join Community panel.</p><div class="copy-row"><input id="inviteLink" readonly value="https://wetalk.ng/join/WETALK26"><button class="btn blue small" onclick="copyInvite()">Copy</button></div></div>
+  </div>
+</div></div>
+
+<!-- Launch / deploy -->
+<div class="modal" id="launchModal"><div class="modal-box large">
+  <div class="modal-head"><h2>V1 Launch Readiness</h2><button class="close" onclick="closeModal('launchModal')">✕</button></div>
+  <p class="modal-sub">This panel turns the launch checklist into a visible part of the prototype. Production server deployment still has to be performed and verified on the real Laravel application.</p>
+  <div class="launch-grid">
+    <div class="launch-card"><h3>Core product</h3><div class="status-list"><div class="status-row"><span>Homepage</span><b class="ok">Ready</b></div><div class="status-row"><span>Registration / login</span><b class="ok">Prototype ready</b></div><div class="status-row"><span>Communities</span><b class="ok">Ready</b></div><div class="status-row"><span>Channels</span><b class="ok">Ready</b></div><div class="status-row"><span>Messages</span><b class="ok">Ready</b></div><div class="status-row"><span>File upload UI</span><b class="ok">Ready</b></div></div></div>
+    <div class="launch-card"><h3>Infrastructure</h3><div class="status-list"><div class="status-row"><span>SQLite dev database</span><b class="ok">Configured</b></div><div class="status-row"><span>Responsive mobile UI</span><b class="ok">Ready</b></div><div class="status-row"><span>OpenAI backend</span><b class="ok">Linked</b></div><div class="status-row"><span>Production domain</span><b class="warn">Needs deploy</b></div><div class="status-row"><span>HTTPS + server checks</span><b class="warn">Needs verification</b></div></div></div>
+    <div class="launch-card"><h3>Security check</h3><div class="status-list"><div class="status-row"><span>Passwords</span><b class="ok">Server hashed</b></div><div class="status-row"><span>CSRF protection</span><b class="ok">Laravel</b></div><div class="status-row"><span>API key exposure</span><b class="ok">Server-side only</b></div><div class="status-row"><span>Upload validation</span><b class="warn">Final audit</b></div><div class="status-row"><span>Permissions / roles</span><b class="warn">Final audit</b></div></div></div>
+    <div class="launch-card"><h3>Launch target</h3><p>Complete the real server deployment, test two separate accounts, test mobile, verify file permissions and remove any homepage claims for features not yet fully implemented.</p><button class="btn blue small" onclick="toast('Launch checklist saved to prototype')">Mark reviewed</button></div>
+  </div>
+</div></div>
+
+<!-- WEAI -->
+<button class="weai-fab" id="weaiFab" type="button" onclick="openWeai()" aria-label="Open WEAI">
+  <span class="weai-fab-label">Ask WEAI</span>
+  <img src="assets/image-46d7fbd3c789.png" alt="WEAI">
+</button>
+
+<div class="weai-chat-modal" id="weaiModal" aria-hidden="true">
+  <section class="weai-chat" role="dialog" aria-modal="true" aria-labelledby="weaiTitle">
+    <div class="weai-landing" id="weaiLanding">
+      <button class="weai-landing-close" type="button" onclick="closeWeai()" aria-label="Close WEAI">✕</button>
+      <nav class="weai-landing-nav">
+        <a class="weai-landing-brand" href="#" onclick="return false"><img src="assets/image-46d7fbd3c789.png" alt="WEAI logo"><span>WEAI</span></a>
+        <div class="weai-landing-links"><button type="button" onclick="toast('Chat, writing, summaries and ideas')">Capabilities</button><button type="button" onclick="toast('Built into your WeTalk communities')">Use cases</button><button type="button" onclick="toast('You control what context WEAI receives')">Safety</button></div>
+        <div class="weai-landing-actions"><button type="button" onclick="showWeaiChat()">Log in</button><button class="primary" type="button" onclick="showWeaiChat()">Try WEAI</button></div>
+      </nav>
+      <main class="weai-landing-main">
+        <p class="weai-landing-kicker">Think. Create. Discover.</p>
+        <h2>Every question.<br>One <span class="blue">assistant.</span><br><span class="purple">WEAI.</span></h2>
+        <p class="weai-landing-copy">Chat, improve messages, create announcements, summarize selected text and turn community ideas into something useful—all from one helpful assistant inside WeTalk.</p>
+        <div class="weai-landing-cta"><button class="primary" type="button" onclick="showWeaiChat()">Start chatting →</button><button type="button" onclick="toast('WEAI helps with writing, summaries and community ideas')">Explore capabilities</button></div>
+        <div class="weai-landing-cards"><div class="weai-landing-card"><b>Fast</b><span>Helpful answers in seconds</span></div><div class="weai-landing-card"><b>Community-ready</b><span>Messages, summaries and ideas</span></div><div class="weai-landing-card"><b>Inside WeTalk</b><span>Available from your dashboard</span></div></div>
+      </main>
+    </div>
+    <header class="weai-chat-head">
+      <img src="assets/image-46d7fbd3c789.png" alt="WEAI logo">
+      <div class="weai-chat-title">
+        <b id="weaiTitle">WEAI</b>
+        <small><span class="weai-online"></span> WeTalk AI assistant</small>
+      </div>
+      <button class="weai-close" type="button" onclick="closeWeai()" aria-label="Close">✕</button>
+    </header>
+
+    <div class="weai-body" id="weaiBody">
+      <div class="weai-msg bot">
+        <img class="weai-mini-logo" src="assets/image-c4c6e229384e.png" alt="">
+        <div class="weai-bubble">Hi! I’m WEAI 👋\nI can help you write announcements, improve messages, summarize selected channel text, brainstorm ideas, and welcome new members.</div>
+      </div>
+      <p class="weai-welcome">Ask a question or choose a shortcut. WEAI remembers this conversation and only uses extra community context when you choose to share it.</p>
+
+      <div class="weai-chips" id="weaiChips">
+        <button class="weai-chip active" data-mode="chat" onclick="chooseWeaiMode(this)">Ask anything</button>
+        <button class="weai-chip" data-mode="announcement" onclick="chooseWeaiMode(this)">📢 Announcement</button>
+        <button class="weai-chip" data-mode="rewrite" onclick="chooseWeaiMode(this)">✨ Improve message</button>
+        <button class="weai-chip" data-mode="summarize" onclick="chooseWeaiMode(this)">📝 Summarize</button>
+        <button class="weai-chip" data-mode="ideas" onclick="chooseWeaiMode(this)">💡 Ideas</button>
+        <button class="weai-chip" data-mode="welcome" onclick="chooseWeaiMode(this)">👋 Welcome</button>
+      </div>
+    </div>
+
+    <div class="weai-composer">
+      <div class="weai-context-box" id="weaiContextBox">
+        <label><span>Optional context you choose to share</span></label>
+        <textarea id="weaiContext" placeholder="Paste text here, or use one of the options below."></textarea>
+        <div class="weai-context-actions">
+          <button type="button" onclick="weaiUseChannel()">Use current channel</button>
+          <button type="button" onclick="weaiUseDraft()">Use message draft</button>
+          <button type="button" onclick="$('weaiContext').value=''">Clear</button>
+        </div>
+      </div>
+      <div class="weai-tools-row">
+        <span class="weai-mode-label" id="weaiModeLabel">Ask anything</span>
+        <button class="weai-context-toggle" type="button" onclick="toggleWeaiContext()">＋ Add context</button>
+      </div>
+      <div class="weai-input-row">
+        <textarea id="weaiPrompt" rows="1" placeholder="Message WEAI…" onkeydown="weaiKeydown(event)"></textarea>
+        <button class="weai-send" type="button" onclick="sendWeai()">➤</button>
+      </div>
+      <p class="weai-disclaimer">AI can make mistakes. Review important details before posting.</p>
+    </div>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+</div>
+
+<script>
+const LOGO='assets/wetalk-original-logo.png';
+let authMode='login';
+let currentType='Community';
+let state={
+  user:{name:'Musa Ibrahim',username:'musai',email:'musa@example.com'},
+  communities:[
+    {id:1,name:'Greenfield University',type:'School',desc:'Campus community',invite:'WETALK26',channels:[
+      {id:11,name:'general',desc:'General discussion for everyone.'},
+      {id:12,name:'announcements',desc:'Important community updates.'},
+      {id:13,name:'resources',desc:'Files, links and useful resources.'}
+    ]},
+    {id:2,name:'Business Team',type:'Business',desc:'Team collaboration',invite:'TEAM2026',channels:[{id:21,name:'general',desc:'Team discussion.'}]}
+  ],
+  currentCommunity:1,currentChannel:11,
+  messages:{
+    11:[
+      {name:'Maya',initials:'MA',time:'2:18 PM',body:'Hi, Leo! Are you free this afternoon?'},
+      {name:'Leo',initials:'LE',time:'2:19 PM',body:'I think so. What do you have in mind?'},
+      {name:'Maya',initials:'MA',time:'2:20 PM',body:'Let’s visit the new café near the park.'},
+      {name:'Leo',initials:'LE',time:'2:21 PM',body:'Great idea! What time should we meet?'},
+      {name:'Maya',initials:'MA',time:'2:22 PM',body:'How about three o’clock?'},
+      {name:'Leo',initials:'LE',time:'2:23 PM',body:'Perfect. I’ll see you there!'},
+      {name:'Maya',initials:'MA',time:'2:24 PM',body:'See you!'}
+    ],
+    12:[{name:'Admin',initials:'AD',time:'9:00 AM',body:'Welcome to #announcements. Important updates will appear here.'}],
+    13:[]
+  }
+};
+
+function loadState(){
+  try{
+    const saved=localStorage.getItem('wetalk-v1-prototype-2026');
+    if(saved) state={...state,...JSON.parse(saved)};
+  }catch(e){}
+}
+function saveState(){localStorage.setItem('wetalk-v1-prototype-2026',JSON.stringify(state))}
+function $(id){return document.getElementById(id)}
+function showScreen(name){
+  ['home','auth','weaiGuide','onboarding','dashboard'].forEach(x=>$(x+'Screen').classList.toggle('hidden',x!==name));
+  window.scrollTo(0,0);
+  if(name==='dashboard') renderDashboard();
+}
+function openAuth(){
+  showScreen('auth');
+  setTimeout(()=>{$('regName')?.focus();checkAccountReady()},60);
+}
+function checkAccountReady(){
+  const name=$('regName')?.value.trim()||'';
+  const username=$('regUsername')?.value.trim().replace(/^@/,'')||'';
+  const email=$('regEmail')?.value.trim()||'';
+  const password=$('regPassword')?.value||'';
+  const confirm=$('regPasswordConfirm')?.value||'';
+  const terms=$('regTerms')?.checked||false;
+  const validEmail=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const validUser=/^[A-Za-z0-9_-]{3,40}$/.test(username);
+  const ready=!!name&&validUser&&validEmail&&password.length>=8&&password===confirm&&terms;
+  $('createAccountButton')?.classList.toggle('ready',ready);
+  $('authReadyNote')?.classList.toggle('show',ready);
+  return ready;
+}
+function registerUser(){
+  if(!checkAccountReady()){
+    toast('Complete your details correctly first');
+    return;
+  }
+  const name=$('regName').value.trim();
+  const username=$('regUsername').value.trim().replace(/^@/,'');
+  const email=$('regEmail').value.trim();
+  state.user={name,username,email};
+  state.prototypeSignedIn=true;
+  state.onboardingComplete=false;
+  saveState();
+  $('weaiWelcomeTitle').textContent=`Welcome, ${name.split(/\s+/)[0]} 👋`;
+  toast('Account created');
+  showScreen('weaiGuide');
+}
+function continueAfterWeaiGuide(){
+  showOnboardingPane('obChoice');
+  showScreen('onboarding');
+}
+function selectOnboardType(btn){
+  onboardType=btn.dataset.obtype||'Community';
+  document.querySelectorAll('.onboard-type').forEach(x=>x.classList.toggle('active',x===btn));
+}
+function showOnboardingPane(id){
+  document.querySelectorAll('.onboard-pane').forEach(x=>x.classList.toggle('active',x.id===id));
+  const success=id==='obSuccess';
+  $('obsCommunity').classList.toggle('active',!success);
+  $('obsCommunity').classList.toggle('done',success);
+  $('obsReady').classList.toggle('active',success);
+  $('obProgress2').classList.toggle('active',!success);
+  $('obProgress2').classList.add('done');
+  $('obProgress3').classList.toggle('active',success);
+}
+function finishOnboardingCreate(){
+  const name=$('obCommunityName').value.trim();
+  const desc=$('obCommunityDesc').value.trim();
+  if(!name){toast('Enter a community name');return}
+  const id=Date.now();
+  const channelId=id+1;
+  const invite=Math.random().toString(36).slice(2,8).toUpperCase();
+  const community={
+    id,name,type:onboardType,desc:desc||'A new WeTalk community',
+    invite,
+    channels:[
+      {id:channelId,name:'general',desc:'General discussion for everyone.'},
+      {id:channelId+1,name:'announcements',desc:'Important community updates.'}
+    ]
+  };
+  state.communities.push(community);
+  state.messages[channelId]=[
+    {name:'WEAI',initials:'AI',time:'Now',body:`Welcome to ${name}! Your #general channel is ready. 👋`}
+  ];
+  state.messages[channelId+1]=[];
+  state.currentCommunity=id;
+  state.currentChannel=channelId;
+  state.onboardingComplete=true;
+  saveState();
+  $('obSuccessTitle').textContent=name+' is ready';
+  $('obSuccessText').textContent='Your account, community and #general channel are ready to use.';
+  $('obInviteCode').textContent=invite;
+  $('obInviteReady').style.display='block';
+  $('obInviteButton').style.display='';
+  showOnboardingPane('obSuccess');
+  toast('Community created');
+}
+function finishOnboardingJoin(){
+  const code=$('obJoinCode').value.trim().toUpperCase();
+  if(!code){toast('Enter an invite code');return}
+  let c=state.communities.find(x=>(x.invite||'').toUpperCase()===code);
+  if(!c&&code==='WETALK26'){
+    const id=Date.now(),channelId=id+1;
+    c={id,name:'WeTalk Community',type:'Community',desc:'Joined with invite code',invite:'WETALK26',channels:[{id:channelId,name:'general',desc:'General community chat'}]};
+    state.communities.push(c);
+    state.messages[channelId]=[{name:'Admin',initials:'AD',time:'Now',body:'Welcome to the WeTalk Community! 👋'}];
+  }
+  if(!c){toast('Invite code not found in this prototype');return}
+  state.currentCommunity=c.id;
+  state.currentChannel=c.channels[0].id;
+  state.onboardingComplete=true;
+  saveState();
+  $('obSuccessTitle').textContent='You joined '+c.name;
+  $('obSuccessText').textContent='Your account is ready and you can now start chatting in #'+c.channels[0].name+'.';
+  $('obInviteReady').style.display='none';
+  $('obInviteButton').style.display='none';
+  showOnboardingPane('obSuccess');
+  toast('Community joined');
+}
+function finishOnboardingToDashboard(){
+  showScreen('dashboard');
+}
+function finishOnboardingAndInvite(){
+  showScreen('dashboard');
+  setTimeout(()=>openModal('qrModal'),80);
+}
+function initials(name){return name.split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0].toUpperCase()).join('')}
+function currentCommunity(){return state.communities.find(c=>c.id===state.currentCommunity)||state.communities[0]}
+function currentChannel(){
+  const c=currentCommunity(); return c.channels.find(ch=>ch.id===state.currentChannel)||c.channels[0]
+}
+function renderDashboard(){
+  const u=state.user||{name:'Musa Ibrahim',username:'musai'};
+  $('topName').textContent=u.name;$('topUsername').textContent='@'+u.username;$('topInitials').textContent=initials(u.name);$('sideInitials').textContent=initials(u.name);$('sideName').textContent=u.name;
+  const community=currentCommunity(); if(!community)return;
+  $('workspaceName').textContent=community.name;
+  $('communityList').innerHTML=state.communities.map(c=>`<div class="community-item ${c.id===community.id?'active':''}" onclick="switchCommunity(${c.id})"><span class="c-dot">${initials(c.name)}</span><span>${escapeHtml(c.name)}</span></div>`).join('');
+  $('channelList').innerHTML=community.channels.map(ch=>`<div class="channel ${ch.id===state.currentChannel?'active':''}" onclick="switchChannel(${ch.id})"><b>#</b><span>${escapeHtml(ch.name)}</span></div>`).join('');
+  const channel=currentChannel();
+  $('channelTitle').textContent='# '+channel.name;$('channelDesc').textContent=channel.desc||'Community channel';
+  $('inviteCode').textContent=community.invite;$('inviteLink').value='https://wetalk.ng/join/'+community.invite;
+  renderMessages();generateQr(community.invite);
+}
+function renderMessages(filter=''){
+  const list=state.messages[state.currentChannel]||[];
+  const f=filter.toLowerCase();
+  const shown=f?list.filter(m=>(m.body||m.file||'').toLowerCase().includes(f)||m.name.toLowerCase().includes(f)):list;
+  $('messages').innerHTML=shown.length?shown.map(m=>`<article class="message"><div class="avatar" style="${m.name==='Aisha Bello'?'background:linear-gradient(135deg,#ef3340,#ff7b72)':''}">${escapeHtml(m.initials||initials(m.name))}</div><div><div class="message-head"><b>${escapeHtml(m.name)}</b><time>${escapeHtml(m.time||'Now')}</time></div>${m.body?`<div class="message-body">${escapeHtml(m.body)}</div>`:''}${m.file?`<div class="file-card">📄<div><strong>${escapeHtml(m.file)}</strong><span>${escapeHtml(m.size||'File attachment')}</span></div></div>`:''}${m.reaction?`<span class="reaction">${escapeHtml(m.reaction)}</span>`:''}</div></article>`).join(''):`<div style="text-align:center;color:#8997ab;padding:70px 20px"><h2 style="color:#1c2b46">Welcome to #${escapeHtml(currentChannel().name)}</h2><p>Be the first person to start the conversation.</p></div>`;
+  $('messages').scrollTop=$('messages').scrollHeight;
+}
+function switchCommunity(id){
+  state.currentCommunity=id;const c=currentCommunity();state.currentChannel=c.channels[0]?.id;saveState();renderDashboard();
+}
+function switchChannel(id){state.currentChannel=id;saveState();renderDashboard()}
+function sendMessage(){
+  const input=$('messageInput'),body=input.value.trim();if(!body)return;
+  const arr=state.messages[state.currentChannel]||(state.messages[state.currentChannel]=[]);
+  arr.push({name:state.user.name,initials:initials(state.user.name),time:new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}),body});
+  input.value='';saveState();renderMessages();toast('Message sent');
+  setTimeout(()=>{
+    const replies=['Got it 👍','Thanks for the update!','Sounds good to me.','I’ll check that now.'];
+    arr.push({name:'Aisha Bello',initials:'AB',time:new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}),body:replies[Math.floor(Math.random()*replies.length)]});
+    saveState();renderMessages();
+  },1200);
+}
+function attachFile(e){
+  const file=e.target.files?.[0];if(!file)return;
+  const arr=state.messages[state.currentChannel]||(state.messages[state.currentChannel]=[]);
+  arr.push({name:state.user.name,initials:initials(state.user.name),time:new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}),file:file.name,size:formatBytes(file.size)});
+  e.target.value='';saveState();renderMessages();toast('File attached in prototype');
+}
+function formatBytes(n){if(n<1024)return n+' B';if(n<1048576)return (n/1024).toFixed(1)+' KB';return (n/1048576).toFixed(1)+' MB'}
+function searchMessages(){renderMessages($('searchBox').value.trim())}
+function selectType(btn){currentType=btn.dataset.type;document.querySelectorAll('.type-btn').forEach(b=>b.classList.toggle('active',b===btn))}
+function createCommunity(){
+  const name=$('newCommunityName').value.trim();if(!name){toast('Enter a community name');return}
+  const id=Date.now(),chId=id+1,invite=Math.random().toString(36).slice(2,10).toUpperCase();
+  state.communities.push({id,name,type:currentType,desc:$('newCommunityDesc').value.trim(),invite,channels:[{id:chId,name:'general',desc:'General discussion for everyone.'}]});
+  state.messages[chId]=[];state.currentCommunity=id;state.currentChannel=chId;saveState();closeModal('communityModal');$('newCommunityName').value='';$('newCommunityDesc').value='';renderDashboard();toast('Community created');
+}
+function createChannel(){
+  const name=$('newChannelName').value.trim().toLowerCase().replace(/[^a-z0-9-]+/g,'-').replace(/^-|-$/g,'');if(!name){toast('Enter a channel name');return}
+  const c=currentCommunity();const id=Date.now();c.channels.push({id,name,desc:$('newChannelDesc').value.trim()||'Community channel'});state.messages[id]=[];state.currentChannel=id;saveState();closeModal('channelModal');$('newChannelName').value='';$('newChannelDesc').value='';renderDashboard();toast('#'+name+' created');
+}
+function joinCommunity(){
+  const code=$('joinCode').value.trim().toUpperCase();if(!code){toast('Enter an invite code');return}
+  let c=state.communities.find(x=>x.invite===code);
+  if(!c&&code==='WETALK26'){
+    c={id:Date.now(),name:'WeTalk Community',type:'Community',desc:'Joined with invite code',invite:'WETALK26',channels:[{id:Date.now()+1,name:'general',desc:'General community chat'}]};state.communities.push(c);state.messages[c.channels[0].id]=[{name:'Admin',initials:'AD',time:'Now',body:'Welcome to the WeTalk Community! 👋'}];
+  }
+  if(!c){toast('Invite code not found in this prototype');return}
+  state.currentCommunity=c.id;state.currentChannel=c.channels[0].id;saveState();closeModal('joinModal');renderDashboard();toast('Joined '+c.name);
+}
+function openModal(id){$(id).classList.add('open');if(id==='qrModal')generateQr(currentCommunity().invite)}
+function closeModal(id){$(id).classList.remove('open')}
+function openLaunch(){openModal('launchModal')}
+function toggleSidebar(){$('sidebar').classList.toggle('open')}
+function copyInvite(){
+  const text=$('inviteLink').value;
+  if(navigator.clipboard)navigator.clipboard.writeText(text);
+  toast('Invite link copied');
+}
+function generateQr(seed){
+  let v=0;for(const ch of seed)v=(v*31+ch.charCodeAt(0))>>>0;
+  let html='';for(let i=0;i<169;i++){v=(1664525*v+1013904223)>>>0;const on=(v>>>28)%2===1 || (i%13<3&&Math.floor(i/13)<3) || (i%13>9&&Math.floor(i/13)<3) || (i%13<3&&Math.floor(i/13)>9);html+=`<span class="${on?'on':''}"></span>`}$('qrGrid').innerHTML=html;
+}
+
+
+let weaiMode='chat';
+let weaiConversation=[];
+
+function openWeai(){
+  const modal=$('weaiModal');
+  const chat=modal?.querySelector('.weai-chat');
+  chat?.classList.remove('landing-active');
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden','false');
+  setTimeout(()=>$('weaiPrompt')?.focus(),80);
+}
+function showWeaiChat(){
+  const chat=document.querySelector('#weaiModal .weai-chat');
+  chat?.classList.remove('landing-active');
+  setTimeout(()=>$('weaiPrompt')?.focus(),60);
+}
+function closeWeai(){
+  const modal=$('weaiModal');
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden','true');
+}
+function chooseWeaiMode(btn){
+  weaiMode=btn.dataset.mode||'chat';
+  document.querySelectorAll('.weai-chip').forEach(x=>x.classList.toggle('active',x===btn));
+  const labels={
+    chat:'Ask anything',
+    announcement:'Draft an announcement',
+    rewrite:'Improve a message',
+    summarize:'Summarize selected text',
+    ideas:'Brainstorm community ideas',
+    welcome:'Write a welcome message'
+  };
+  const prompts={
+    announcement:'Write a friendly community announcement about ',
+    rewrite:'Improve this message while keeping the same meaning: ',
+    summarize:'Summarize the selected channel messages and list important action items.',
+    ideas:'Give me practical ideas for improving our community.',
+    welcome:'Write a warm welcome message for new community members.'
+  };
+  $('weaiModeLabel').textContent=labels[weaiMode]||labels.chat;
+  if(prompts[weaiMode] && !$('weaiPrompt').value.trim()) $('weaiPrompt').value=prompts[weaiMode];
+}
+function toggleWeaiContext(){
+  $('weaiContextBox').classList.toggle('open');
+}
+function weaiUseChannel(){
+  const list=state.messages[state.currentChannel]||[];
+  $('weaiContext').value=list.map(m=>`${m.name}: ${m.body||m.file||''}`).join('\n');
+  $('weaiContextBox').classList.add('open');
+  const chip=document.querySelector('.weai-chip[data-mode="summarize"]');
+  if(chip)chooseWeaiMode(chip);
+  $('weaiPrompt').value='Summarize these channel messages and highlight important action items.';
+}
+function weaiUseDraft(){
+  $('weaiContext').value=$('messageInput').value||'';
+  $('weaiContextBox').classList.add('open');
+  const chip=document.querySelector('.weai-chip[data-mode="rewrite"]');
+  if(chip)chooseWeaiMode(chip);
+  $('weaiPrompt').value='Improve this message while keeping the same meaning.';
+}
+function openAiForComposer(){
+  openWeai();
+  setTimeout(weaiUseDraft,80);
+}
+function weaiKeydown(e){
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendWeai()}
+}
+function weaiAddMessage(role,text,actions=false){
+  const body=$('weaiBody');
+  const wrap=document.createElement('div');
+  wrap.className='weai-msg '+role;
+
+  if(role==='bot'){
+    const img=document.createElement('img');
+    img.className='weai-mini-logo';
+    img.src=LOGO_WEAI;
+    img.alt='';
+    wrap.appendChild(img);
+  }
+
+  const bubble=document.createElement('div');
+  bubble.className='weai-bubble';
+  bubble.textContent=text;
+  wrap.appendChild(bubble);
+  body.appendChild(wrap);
+
+  if(actions&&role==='bot'){
+    const action=document.createElement('div');
+    action.className='weai-answer-actions';
+    action.innerHTML='<button type="button">Copy</button><button type="button">Insert into message</button>';
+    const buttons=action.querySelectorAll('button');
+    buttons[0].onclick=()=>{if(navigator.clipboard)navigator.clipboard.writeText(text);toast('WEAI answer copied')};
+    buttons[1].onclick=()=>{$('messageInput').value=text;closeWeai();$('messageInput').focus()};
+    body.appendChild(action);
+  }
+
+  body.scrollTop=body.scrollHeight;
+  return bubble;
+}
+async function sendWeai(){
+  const input=$('weaiPrompt');
+  const prompt=input.value.trim();
+  if(!prompt)return;
+  weaiAddMessage('user',prompt);
+  input.value='';
+
+  const body=$('weaiBody');
+  const typingWrap=document.createElement('div');
+  typingWrap.className='weai-msg bot';
+  typingWrap.innerHTML=`<img class="weai-mini-logo" src="${LOGO_WEAI}" alt=""><div class="weai-bubble"><span class="weai-typing"><i></i><i></i><i></i></span></div>`;
+  body.appendChild(typingWrap);
+  body.scrollTop=body.scrollHeight;
+
+  const context=$('weaiContext').value.trim();
+  const userContent=context ? `${prompt}\n\nUser-selected context:\n${context}` : prompt;
+  weaiConversation.push({role:'user',content:userContent});
+  try{
+    const response=await fetch('/api/chat/stream',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'text/event-stream'},
+      body:JSON.stringify({messages:weaiConversation.slice(-16),modelPreset:'balanced',webSearch:false})
+    });
+    if(!response.ok){
+      const detail=await response.json().catch(()=>({}));
+      throw new Error(detail.error||'WEAI could not answer right now.');
+    }
+    if(!response.body)throw new Error('Live responses are unavailable in this browser.');
+    const reader=response.body.getReader();
+    const decoder=new TextDecoder();
+    let buffer='',answer='';
+    typingWrap.remove();
+    const bubble=weaiAddMessage('bot','');
+    while(true){
+      const {value,done}=await reader.read();
+      if(done)break;
+      buffer+=decoder.decode(value,{stream:true});
+      const events=buffer.split('\n\n');
+      buffer=events.pop()||'';
+      for(const event of events){
+        const line=event.split('\n').find(item=>item.startsWith('data:'));
+        if(!line)continue;
+        let data; try{data=JSON.parse(line.slice(5).trim())}catch{continue}
+        if(data.type==='delta'&&typeof data.delta==='string'){
+          answer+=data.delta;
+          bubble.textContent=answer;
+          body.scrollTop=body.scrollHeight;
+        }else if(data.type==='error'){
+          throw new Error(data.error||'WEAI could not answer right now.');
+        }
+      }
+    }
+    if(!answer.trim())throw new Error('WEAI returned an empty response.');
+    weaiConversation.push({role:'assistant',content:answer});
+    const actions=document.createElement('div');
+    actions.className='weai-answer-actions';
+    actions.innerHTML='<button type="button">Copy</button><button type="button">Insert into message</button>';
+    const buttons=actions.querySelectorAll('button');
+    buttons[0].onclick=()=>{if(navigator.clipboard)navigator.clipboard.writeText(answer);toast('WEAI answer copied')};
+    buttons[1].onclick=()=>{$('messageInput').value=answer;closeWeai();$('messageInput').focus()};
+    body.appendChild(actions);
+  }catch(error){
+    typingWrap.remove();
+    weaiAddMessage('bot',error.message||'WEAI needs the separate WeTalk server. Start that server and try again.');
+  }
+}
+const LOGO_WEAI='assets/image-46d7fbd3c789.png';
+
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.classList.remove('show'),2200)}
+function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();if(!$('dashboardScreen').classList.contains('hidden'))$('searchBox').focus()}});
+document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));
+$('weaiModal')?.addEventListener('click',e=>{if(e.target===$('weaiModal'))closeWeai()});
+loadState();
+
+['regName','regUsername','regEmail','regPassword','regPasswordConfirm'].forEach(id=>{
+  $(id)?.addEventListener('keydown',e=>{
+    if(e.key==='Enter' && checkAccountReady()){e.preventDefault();registerUser()}
+  });
+});
+
+
+$('obJoinCode')?.addEventListener('keydown',e=>{if(e.key==='Enter')finishOnboardingJoin()});
+generateQr('WETALK26');
+</script>
+<div class="v1-full-badge"><b>WeTalk V1 Prototype</b><small>Demo data · Browser-only · Server features not connected</small></div></body>
+</html>
