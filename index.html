@@ -13,6 +13,7 @@
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}
 button,input,textarea,select{font:inherit}
 button,a{touch-action:manipulation}
@@ -25,7 +26,7 @@ a{text-decoration:none;color:inherit}
 .badge{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:rgba(255,255,255,.055);border-radius:999px;padding:7px 10px;font-size:11px;font-weight:800}
 .badge.green{color:#6be6a8;border-color:rgba(49,213,139,.25);background:rgba(49,213,139,.08)}
 .badge.orange{color:#ffbd78;border-color:rgba(255,159,67,.24);background:rgba(255,159,67,.08)}
-.btn{border:0;border-radius:12px;padding:13px 19px;font-weight:900;cursor:pointer;transition:.2s;display:inline-flex;justify-content:center;align-items:center;gap:8px}
+.btn{border:0;border-radius:12px;padding:13px 19px;font-weight:900;cursor:pointer;transition:transform .2s,background-color .2s,border-color .2s,box-shadow .2s;display:inline-flex;justify-content:center;align-items:center;gap:8px}
 .btn:hover{transform:translateY(-2px)}
 .btn.white{background:#fff;color:#07111f}
 .btn.blue{background:linear-gradient(135deg,var(--blue),#285bd7);color:#fff;box-shadow:0 12px 30px rgba(52,120,255,.24)}
@@ -33,8 +34,11 @@ a{text-decoration:none;color:inherit}
 .btn.ghost{background:rgba(255,255,255,.055);border:1px solid var(--line);color:#fff}
 .btn.small{padding:9px 12px;border-radius:9px;font-size:12px}
 .icon-btn{width:38px;height:38px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:#fff;border-radius:10px;display:grid;place-items:center;cursor:pointer}
-input,textarea,select{width:100%;background:#0c1526;border:1px solid var(--line);color:#fff;border-radius:11px;padding:12px;outline:none}
+input,textarea,select{width:100%;background:#0c1526;border:1px solid var(--line);color:#fff;border-radius:11px;padding:12px}
+input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid #67a0ff;outline-offset:3px}
 input:focus,textarea:focus,select:focus{border-color:#4e87ff;box-shadow:0 0 0 3px rgba(52,120,255,.12)}
+.skip-link-proto{position:fixed;top:10px;left:10px;z-index:200;transform:translateY(-160%);background:#fff;color:#07111f;padding:10px 14px;border-radius:9px;font-weight:900}
+.skip-link-proto:focus{transform:translateY(0)}
 label{display:block;color:#aab8ce;font-size:12px;font-weight:800;margin-top:13px}
 label span{display:block;margin-bottom:6px}
 .screen{min-height:100vh}
@@ -127,7 +131,7 @@ label span{display:block;margin-bottom:6px}
 .onboard-choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
 .onboard-choice{
   border:1px solid var(--line);background:#0c1627;color:#fff;border-radius:17px;
-  padding:20px;text-align:left;cursor:pointer;min-height:165px;transition:.18s
+  padding:20px;text-align:left;cursor:pointer;min-height:165px;transition:background-color .18s,border-color .18s
 }
 .onboard-choice:hover{border-color:#558cff;background:#10203a}
 .onboard-choice .oc-icon{font-size:29px;margin-bottom:25px}
@@ -244,10 +248,10 @@ label span{display:block;margin-bottom:6px}
 .dash-create{border:0;border-radius:11px;padding:13px;background:linear-gradient(135deg,#0757d9,#2d7ef0);color:#fff;font-weight:900;cursor:pointer}
 .side-label{font-size:9px;text-transform:uppercase;letter-spacing:.13em;color:#8896aa;font-weight:950;margin:22px 10px 8px}
 .navitem{border:0;background:transparent;border-radius:9px;padding:10px 11px;display:flex;gap:10px;align-items:center;color:#253550;width:100%;text-align:left;cursor:pointer;font-size:12px}.navitem:hover,.navitem.active{background:#eaf1ff;color:#0757d9}.navitem.active{font-weight:900}
-.communities-list{display:grid;gap:5px}.community-item{display:flex;align-items:center;gap:9px;padding:8px;border-radius:9px;cursor:pointer;font-size:11px}.community-item.active,.community-item:hover{background:#eef4ff}.c-dot{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#3478ff,#8c62ff);color:#fff;display:grid;place-items:center;font-size:9px;font-weight:900}
+.communities-list{display:grid;gap:5px}.community-item{display:flex;align-items:center;gap:9px;padding:8px;border:0;width:100%;border-radius:9px;cursor:pointer;font-size:11px;text-align:left;background:transparent;color:inherit}.community-item.active,.community-item:hover{background:#eef4ff}.c-dot{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#3478ff,#8c62ff);color:#fff;display:grid;place-items:center;font-size:9px;font-weight:900}
 .sidebar-user{margin-top:auto;border-top:1px solid #e1e8f1;padding-top:12px;display:flex;gap:8px;align-items:center}.sidebar-user small{display:block;color:#18a565}
 .channels{background:#fbfdff}.workspace{height:68px;padding:13px 16px;border-bottom:1px solid #e1e8f1;display:flex;align-items:center;justify-content:space-between}.workspace b{font-size:12px}.workspace small{display:block;color:#7e8ca2;font-size:9px;margin-top:2px}
-.channel-list{padding:12px}.channel-head{display:flex;align-items:center;justify-content:space-between;color:#8492a6;text-transform:uppercase;font-size:9px;font-weight:950;letter-spacing:.08em;padding:7px 7px}.channel{display:flex;align-items:center;gap:7px;padding:9px;border-radius:8px;font-size:11px;color:#44536d;cursor:pointer}.channel:hover,.channel.active{background:#eaf1ff;color:#0757d9}.channel.active{font-weight:900}
+.channel-list{padding:12px}.channel-head{display:flex;align-items:center;justify-content:space-between;color:#8492a6;text-transform:uppercase;font-size:9px;font-weight:950;letter-spacing:.08em;padding:7px 7px}.channel{display:flex;align-items:center;gap:7px;padding:9px;width:100%;border:0;text-align:left;background:transparent;border-radius:8px;font-size:11px;color:#44536d;cursor:pointer}.channel:hover,.channel.active{background:#eaf1ff;color:#0757d9}.channel.active{font-weight:900}
 .chat-pane{background:#fff;display:flex;flex-direction:column;min-width:0}.chat-header{height:68px;border-bottom:1px solid #e1e8f1;padding:12px 18px;display:flex;align-items:center;justify-content:space-between}.chat-header h2{font-size:15px;margin:0}.chat-header p{margin:3px 0 0;color:#7d8aa0;font-size:10px}.chat-tools{display:flex;gap:7px}.chat-tools .icon-btn{color:#40506d;background:#fff;border-color:#dfe7f2}
 .messages{flex:1;overflow:auto;padding:18px 22px}.message{display:grid;grid-template-columns:38px 1fr;gap:10px;margin:16px 0}.message .avatar{width:34px;height:34px}.message-head{display:flex;align-items:center;gap:7px}.message-head b{font-size:11px;color:#17243e}.message-head time{font-size:9px;color:#8a98ad}.message-body{font-size:12px;color:#2b3953;line-height:1.55;margin-top:3px}.reaction{display:inline-block;margin-top:6px;background:#f0f4fa;border-radius:999px;padding:4px 7px;font-size:9px}
 .file-card{display:inline-flex;align-items:center;gap:9px;margin-top:7px;border:1px solid #dce5f0;background:#f8faff;border-radius:10px;padding:9px 10px}.file-card strong{font-size:10px}.file-card span{font-size:9px;color:#7c8aa0;display:block}
@@ -266,7 +270,7 @@ label span{display:block;margin-bottom:6px}
 .types{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px}.type-btn{border:1px solid var(--line);background:#0d1728;color:#c4cee0;border-radius:11px;padding:12px;text-align:left;cursor:pointer}.type-btn.active{border-color:#4b87ff;background:#10264d;color:#fff}
 .qr-wrap{display:grid;grid-template-columns:190px 1fr;gap:18px;align-items:center}.qr{width:190px;height:190px;background:#fff;border-radius:16px;padding:13px;display:grid;grid-template-columns:repeat(13,1fr);grid-template-rows:repeat(13,1fr);gap:2px}.qr span{background:#fff}.qr span.on{background:#081324;border-radius:1px}.invite-code{font-size:24px;font-weight:950;letter-spacing:.15em;color:#80adff;margin:7px 0}.copy-row{display:flex;gap:8px}.copy-row input{font-size:11px}
 .launch-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}.launch-card{border:1px solid var(--line);background:#0d1728;border-radius:13px;padding:13px}.launch-card h3{font-size:12px;margin:0 0 9px}.launch-card p{font-size:10px;color:#8e9eb7;line-height:1.5}.status-list{display:grid;gap:7px}.status-row{display:flex;justify-content:space-between;gap:12px;font-size:10px;border-bottom:1px solid rgba(255,255,255,.06);padding:6px 0}.status-row:last-child{border:0}.ok{color:#55dda0}.warn{color:#ffbc71}
-.toast{position:fixed;right:18px;bottom:18px;background:#081325;border:1px solid rgba(255,255,255,.14);color:#fff;border-radius:12px;padding:12px 15px;font-size:11px;box-shadow:0 16px 45px rgba(0,0,0,.35);z-index:100;transform:translateY(120px);opacity:0;transition:.25s}.toast.show{transform:translateY(0);opacity:1}
+.toast{position:fixed;right:18px;bottom:18px;background:#081325;border:1px solid rgba(255,255,255,.14);color:#fff;border-radius:12px;padding:12px 15px;font-size:11px;box-shadow:0 16px 45px rgba(0,0,0,.35);z-index:100;transform:translateY(120px);opacity:0;transition:transform .25s,opacity .25s}.toast.show{transform:translateY(0);opacity:1}
 
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 @media(max-width:1050px){
@@ -275,7 +279,7 @@ label span{display:block;margin-bottom:6px}
 @media(max-width:900px){
   .hero{grid-template-columns:1fr;text-align:center}.hero .lead{margin-left:auto;margin-right:auto}.hero-buttons{justify-content:center}.quick{margin-left:auto;margin-right:auto}.home-features{grid-template-columns:repeat(2,1fr)}
   .auth-card{grid-template-columns:1fr}.auth-side{display:none}
-  .dash-shell{grid-template-columns:220px minmax(0,1fr)}.channels{display:none}.sidebar{position:fixed;left:-260px;top:78px;width:250px;height:calc(100vh - 78px);z-index:30;transition:.25s;box-shadow:10px 0 30px rgba(18,34,60,.14)}.sidebar.open{left:0}.mobile-menu{display:grid}.topbar .search{max-width:none}.top-user span:nth-child(2){display:none}
+  .dash-shell{grid-template-columns:220px minmax(0,1fr)}.channels{display:none}.sidebar{position:fixed;left:-260px;top:78px;width:250px;height:calc(100vh - 78px);z-index:30;transition:left .25s;box-shadow:10px 0 30px rgba(18,34,60,.14)}.sidebar.open{left:0}.mobile-menu{display:grid}.topbar .search{max-width:none}.top-user span:nth-child(2){display:none}
 }
 @media(max-width:620px){
   .home-wrap{padding:18px 16px 45px}.home-header .logo{font-size:22px}.home-header .logo img{width:52px}.home-actions .ghost{display:none}.hero{padding-top:55px;gap:35px}.hero h1{font-size:47px;letter-spacing:-2.5px}.hero .lead{font-size:15px}.quick{grid-template-columns:1fr}.home-features{grid-template-columns:1fr}
@@ -430,7 +434,7 @@ label span{display:block;margin-bottom:6px}
   width:66px;height:66px;border:0;border-radius:21px;padding:4px;
   background:linear-gradient(135deg,#18a8ff,#3d6dff 42%,#a34dff 70%,#ff3b67);
   box-shadow:0 16px 42px rgba(35,84,220,.34),0 0 0 5px rgba(255,255,255,.9);
-  cursor:pointer;transition:.22s;display:none;
+  cursor:pointer;transition:transform .22s;display:none;
 }
 #dashboardScreen:not(.hidden) ~ .weai-fab{display:block}
 .weai-fab:hover{transform:translateY(-4px) scale(1.03)}
@@ -443,7 +447,7 @@ label span{display:block;margin-bottom:6px}
   position:absolute;right:76px;top:50%;transform:translateY(-50%);
   white-space:nowrap;background:#0a1323;color:#fff;border:1px solid rgba(255,255,255,.12);
   border-radius:999px;padding:8px 11px;font-size:10px;font-weight:850;
-  box-shadow:0 10px 28px rgba(0,0,0,.2);opacity:0;pointer-events:none;transition:.18s;
+  box-shadow:0 10px 28px rgba(0,0,0,.2);opacity:0;pointer-events:none;transition:opacity .18s;
 }
 .weai-fab:hover .weai-fab-label{opacity:1}
 @keyframes weaiPulse{0%{transform:scale(.94);opacity:.55}70%,100%{transform:scale(1.18);opacity:0}}
@@ -498,7 +502,7 @@ label span{display:block;margin-bottom:6px}
 .weai-chips{display:flex;gap:7px;flex-wrap:wrap;margin:4px 0 12px}
 .weai-chip{
   border:1px solid #d9e3f0;background:#fff;color:#3f526d;border-radius:999px;
-  padding:8px 10px;font-size:9px;font-weight:850;cursor:pointer;transition:.18s
+  padding:8px 10px;font-size:9px;font-weight:850;cursor:pointer;transition:background-color .18s,border-color .18s,color .18s
 }
 .weai-chip:hover,.weai-chip.active{border-color:#75a0ff;background:#edf3ff;color:#0757d9}
 .weai-context-box{
@@ -866,23 +870,24 @@ label span{display:block;margin-bottom:6px}
       <div>
         <div class="eyebrow">Interactive prototype · demo data</div>
         <h1>Every community.<br>One <span class="blue">conversation.</span><br><span class="red">No SIM.</span></h1>
-        <p class="lead">Create communities, organize channels, invite people with a link or code, share files and communicate from any modern browser—without requiring a phone number.</p>
+        <p class="lead">Explore the WeTalk concept in this interactive demo. Profiles, communities and messages are simulated and saved only in this browser; no real account, shared chat or file upload is created.</p>
         <div class="hero-buttons">
-          <button class="btn blue" onclick="openAuth()">Create account (demo)</button>
+          <button class="btn blue" onclick="enterDemo()">Explore the demo</button>
+          <a class="btn ghost" href="https://github.com/Feez101/wetalk_v1_prototype/issues/new?template=demo-feedback.yml" target="_blank" rel="noopener noreferrer">Give feedback</a>
         </div>
         <div class="quick">
-          <div class="q"><b>Fast</b><span>Live community messaging</span></div>
-          <div class="q"><b>No number</b><span>Username-first identity</span></div>
-          <div class="q"><b>Anywhere</b><span>Responsive web access</span></div>
+          <div class="q"><b>Interactive</b><span>Try the prototype flows</span></div>
+          <div class="q"><b>Browser-only</b><span>Demo data stays local</span></div>
+          <div class="q"><b>Concept</b><span>Not a live service</span></div>
         </div>
       </div>
       </div>
 
     <section class="home-features">
-      <article class="home-card"><div>💬</div><b>Live messaging</b><p>Send messages and see new conversations appear without leaving the channel.</p></article>
-      <article class="home-card"><div>▦</div><b>Invite & join</b><p>Share an invite link or code so people can join your community quickly.</p></article>
-      <article class="home-card"><div>📎</div><b>File sharing</b><p>Attach basic documents and images directly inside conversations.</p></article>
-      <article class="home-card"><div>🛡</div><b>Launch controls</b><p>Database, mobile, deployment and security readiness are tracked in the V1 dashboard.</p></article>
+      <article class="home-card"><div>💬</div><b>Simulated messaging</b><p>Try the chat UI. Messages and scripted replies are stored only in this browser.</p></article>
+      <article class="home-card"><div>▦</div><b>Community flows</b><p>Create a demo community or try the sample invite code. Nothing is shared with other visitors.</p></article>
+      <article class="home-card"><div>📎</div><b>Attachment preview</b><p>The demo stores a selected file’s name only; it does not upload or share the file.</p></article>
+      <article class="home-card"><div>🛡</div><b>Product concept</b><p>Roles, live services and production security are planned work, not active features here.</p></article>
     </section>
 
 
@@ -901,21 +906,21 @@ label span{display:block;margin-bottom:6px}
 
     <section class="section-wrap">
       <div class="section-head">
-        <div class="section-kicker">Everything in one place</div>
-        <h2>Built for real communities, not just chat.</h2>
-        <p>WeTalk combines communication, organization and community management in one web-first experience.</p>
+        <div class="section-kicker">Product concepts</div>
+        <h2>What WeTalk is designed to offer.</h2>
+        <p>This prototype previews the product direction. Items below describe planned capabilities; only the flows explicitly marked as demo are interactive here.</p>
       </div>
       <div class="big-feature-grid">
-        <article class="big-feature"><div class="fi">💬</div><h3>Real-time messaging</h3><p>Keep conversations flowing across channels with fast updates and a focused chat experience.</p></article>
-        <article class="big-feature"><div class="fi">#</div><h3>Channels</h3><p>Separate announcements, resources, projects, topics and general chat without creating chaos.</p></article>
-        <article class="big-feature"><div class="fi">▦</div><h3>Invite & join</h3><p>Invite new members with a link, community code or QR-based joining flow.</p></article>
-        <article class="big-feature"><div class="fi">📎</div><h3>Files</h3><p>Share images, PDFs and common documents directly inside conversations.</p></article>
-        <article class="big-feature"><div class="fi">🛡</div><h3>Roles & permissions</h3><p>Owners, admins, moderators and members can have different levels of control.</p></article>
-        <article class="big-feature"><div class="fi">🔔</div><h3>Notifications</h3><p>Surface mentions, announcements and important community activity without overwhelming users.</p></article>
-        <article class="big-feature"><div class="fi">✦</div><h3>WeTalk AI</h3><p>Draft announcements, improve messages and summarize text a user chooses to send to the assistant.</p></article>
+        <article class="big-feature"><div class="fi">💬</div><h3>Chat demo</h3><p>Send local demo messages and see scripted responses. No real-time or multi-user messaging is connected.</p></article>
+        <article class="big-feature"><div class="fi">#</div><h3>Channels</h3><p>Create sample channels in your browser. They are not shared with other visitors.</p></article>
+        <article class="big-feature"><div class="fi">▦</div><h3>Invite concept</h3><p>Try the sample invite code in the demo. QR codes and invite URLs are visual mockups.</p></article>
+        <article class="big-feature"><div class="fi">📎</div><h3>File preview</h3><p>The demo records a filename only. Actual file uploads and sharing are not available.</p></article>
+        <article class="big-feature"><div class="fi">🛡</div><h3>Roles & permissions</h3><p>Shown as a product concept only; role-based access is not implemented in this demo.</p></article>
+        <article class="big-feature"><div class="fi">🔔</div><h3>Notifications</h3><p>Planned capability; this prototype does not deliver notifications.</p></article>
+        <article class="big-feature"><div class="fi">✦</div><h3>WEAI concept</h3><p>The chat UI is included, but live answers require the separate server and are not enabled on this static demo.</p></article>
         <article class="big-feature"><div class="fi">📱</div><h3>Responsive web app</h3><p>Use WeTalk from a laptop, tablet or phone without requiring a phone number at signup.</p></article>
       </div>
-      <div class="feature-note"><b>V1 focus:</b> community creation, joining, channels, messaging, basic files, roles and a polished web experience. Voice/video, advanced AI and local-network features can expand later.</div>
+      <div class="feature-note"><b>Prototype scope:</b> browser-local demo flows only. This page does not provide real accounts, shared communities, uploaded files, production permissions, or live AI.</div>
     </section>
 
     <section class="section-wrap" style="padding-top:40px">
@@ -925,7 +930,7 @@ label span{display:block;margin-bottom:6px}
         <p>The onboarding flow is intentionally short so people can start communicating quickly.</p>
       </div>
       <div class="steps-grid">
-        <article class="step-card"><div class="step-no">1</div><h3>Create your account</h3><p>Choose your name, username, email and password. No phone number is required for the WeTalk V1 concept.</p></article>
+        <article class="step-card"><div class="step-no">1</div><h3>Create a demo profile</h3><p>Try the browser-only onboarding. It does not create a real account or send your password to a server.</p></article>
         <article class="step-card"><div class="step-no">2</div><h3>Create or join a community</h3><p>Start your own space or enter an invite code shared by an existing community.</p></article>
         <article class="step-card"><div class="step-no">3</div><h3>Open a channel and talk</h3><p>Use #general immediately, create more channels, share files and invite additional members.</p></article>
       </div>
@@ -948,10 +953,10 @@ label span{display:block;margin-bottom:6px}
         <div class="ai-copy">
           <div class="section-kicker">WeTalk AI</div>
           <h2>Meet WEAI—your helpful assistant inside WeTalk.</h2>
-          <p>WEAI helps you write announcements, improve messages, generate community ideas, and summarize only the text you choose to share. It supports your conversations—it never replaces them.</p>
+          <p>The WEAI interface previews possible assistant workflows. Live answers are not connected on this static prototype; the separate server is required before AI can respond.</p>
           <div class="weai-home-guide" aria-label="How to use WEAI">
   <div class="weai-guide-step"><strong>1</strong><span><b>Open WEAI</b><small>Enter your dashboard and select WEAI Assistant.</small></span></div>
-  <div class="weai-guide-step"><strong>2</strong><span><b>Choose what you need</b><small>Ask a question, improve a message, create an announcement, summarize text, or generate an image.</small></span></div>
+  <div class="weai-guide-step"><strong>2</strong><span><b>Choose what you need</b><small>Preview ways to ask a question, improve a message, draft an announcement, summarize text or brainstorm ideas.</small></span></div>
   <div class="weai-guide-step"><strong>3</strong><span><b>Review the result</b><small>Copy it, improve it, or insert it into your WeTalk conversation.</small></span></div>
 </div><button class="btn blue" onclick="showScreen('dashboard');setTimeout(()=>openWeai(),120)">Open WEAI in the dashboard</button>
         </div>
@@ -969,13 +974,13 @@ label span{display:block;margin-bottom:6px}
         <div>
           <div class="section-kicker">Privacy & control</div>
           <h2 style="font-size:clamp(34px,4.2vw,55px);letter-spacing:-2.4px;line-height:1.03;margin:12px 0 14px">Your community should stay in control.</h2>
-          <p style="color:#9cacbf;line-height:1.75">WeTalk V1 is being structured around protected accounts, server-side secrets, validation and role-based permissions. Security claims will only be made when the underlying feature is actually implemented and tested.</p>
+          <p style="color:#9cacbf;line-height:1.75">This static demo has no production accounts, server-side secrets, upload validation or enforced roles. Those protections must be implemented and verified in a live application before real users or private data are involved.</p>
         </div>
         <div class="security-list">
-          <div class="security-item"><b>🔐 Server-side authentication</b><span>Passwords belong in the backend and are never stored as plain text in the production application.</span></div>
-          <div class="security-item"><b>🛡 Roles & permissions</b><span>Community owners and admins can control who manages channels and members.</span></div>
-          <div class="security-item"><b>🔑 Protected API keys</b><span>OpenAI credentials stay on the Laravel server, not inside browser JavaScript.</span></div>
-          <div class="security-item"><b>✅ Launch audit</b><span>Uploads, permissions, deployment settings and HTTPS should be checked before public release.</span></div>
+          <div class="security-item"><b>🔐 Authentication · planned</b><span>The demo profile form is not a real sign-in system.</span></div>
+          <div class="security-item"><b>🛡 Roles & permissions · planned</b><span>Displayed roles are illustrative; access is not enforced.</span></div>
+          <div class="security-item"><b>🔑 AI service · not connected</b><span>No AI credentials or live WEAI service are included in this static site; prompts are not sent from the hosted demo.</span></div>
+          <div class="security-item"><b>✅ Production review · required</b><span>Security, uploads, permissions and deployment need testing before launch.</span></div>
         </div>
       </div>
     </section>
@@ -990,11 +995,11 @@ label span{display:block;margin-bottom:6px}
 
     <section class="section-wrap">
       <div class="section-head">
-        <div class="section-kicker">Product roadmap</div>
-        <h2>Start focused. Expand with purpose.</h2>
+        <div class="section-kicker">Planned roadmap</div>
+        <h2>Where the product could go next.</h2>
       </div>
       <div class="roadmap-grid">
-        <article class="roadmap current"><small>V1</small><h3>Core communities</h3><p>Accounts, communities, channels, text messages, invites, roles and basic files.</p></article>
+        <article class="roadmap current"><small>PLANNED V1</small><h3>Core communities</h3><p>Real accounts, communities, channels, shared messages, working invites, enforced roles and file uploads.</p></article>
         <article class="roadmap"><small>V1.5</small><h3>Polish & reliability</h3><p>Notifications, better moderation, stronger mobile UX, search and production monitoring.</p></article>
         <article class="roadmap"><small>V2</small><h3>Richer communication</h3><p>Voice notes, polls, events, better files and community discovery.</p></article>
         <article class="roadmap"><small>V3</small><h3>Advanced platform</h3><p>Voice/video, deeper AI, translation, bots, plugins and enterprise controls.</p></article>
@@ -1010,23 +1015,24 @@ label span{display:block;margin-bottom:6px}
         <details><summary>Does WeTalk require a phone number?</summary><p>The V1 concept is designed around email + username identity, so a phone number is not required for the prototype flow.</p></details>
         <details><summary>Is WeTalk only for schools?</summary><p>No. The product is being designed for schools, businesses, organizations, gaming groups, communities and other teams that need organized communication.</p></details>
         <details><summary>Does WeTalk already support voice and video?</summary><p>Not in the V1 launch scope. Those are later features so the first release can focus on a reliable community messaging experience.</p></details>
-        <details><summary>Is the AI assistant private?</summary><p>The Laravel design keeps the OpenAI API key on the server. In the planned V1 flow, content is sent to AI only when the user deliberately asks the assistant to process it.</p></details>
-        <details><summary>Can I try the product without setting up Laravel?</summary><p>Yes. The standalone prototype includes an interactive homepage, registration flow and dashboard using browser-local demo state.</p></details>
+        <details><summary>Is the AI assistant private?</summary><p>WEAI is disabled on this hosted prototype and does not send prompts or context. A production AI service is not included or security-reviewed here.</p></details>
+        <details><summary>Can I try the product without setting up Laravel?</summary><p>Yes. The static demo includes an interactive homepage, simulated onboarding and dashboard using browser-local demo state. It does not create real accounts or shared conversations.</p></details>
       </div>
     </section>
 
     <section class="section-wrap" style="padding-bottom:30px">
       <div class="final-cta">
         <div class="section-kicker">Start talking</div>
-        <h2>Build your community on WeTalk.</h2>
-        <p>Create an account, open your first community, invite people and start a conversation from one simple dashboard.</p>
+        <h2>Explore the WeTalk concept.</h2>
+        <p>Try the local demo flows and tell us what is clear, confusing or missing. This prototype does not create real accounts or shared conversations.</p>
         <div class="hero-buttons" style="justify-content:center;margin-top:0">
           <button class="btn blue" onclick="enterDemo()">Open demo dashboard</button>
+          <a class="btn ghost" href="https://github.com/Feez101/wetalk_v1_prototype/issues/new?template=demo-feedback.yml" target="_blank" rel="noopener noreferrer">Give feedback</a>
         </div>
       </div>
       <footer class="home-footer">
         <div><a class="logo" href="#" onclick="showScreen('home');return false" style="font-size:20px"><img src="assets/wetalk-original-logo.png" alt="WeTalk logo"><span class="word"><span class="we">We</span><span class="talk">Talk</span></span></a><div style="margin-top:8px">Community communication, made simple.</div></div>
-        <div class="footer-links"><a href="#homeScreen">Home</a><a href="#" onclick="enterDemo();return false">Dashboard</a><a href="#" onclick="openAuth();return false">Create account (demo)</a></div>
+        <div class="footer-links"><a href="#homeScreen">Home</a><a href="#" onclick="enterDemo();return false">Dashboard</a><a href="#" onclick="openAuth();return false">Create account (demo)</a><a href="https://github.com/Feez101/wetalk_v1_prototype/issues/new?template=demo-feedback.yml" target="_blank" rel="noopener noreferrer">Give feedback</a></div>
         <div style="grid-column:1/-1;text-align:center;margin-top:18px;padding-top:18px;border-top:1px solid rgba(255,255,255,.08);font-weight:900;color:#ff5d66;letter-spacing:.03em">© 2026 WeTalk. All rights reserved. &nbsp;·&nbsp; Developed by FEEZ Tech Limited</div>
       </footer>
     </section>
@@ -1056,21 +1062,21 @@ label span{display:block;margin-bottom:6px}
         <h3>Enter your details</h3>
         <p class="sub">We’ll use these details to create your WeTalk account.</p>
 
-        <label><span>Full name</span><input id="regName" autocomplete="name" placeholder="Your full name" oninput="checkAccountReady()"></label>
-        <label><span>Username</span><input id="regUsername" autocomplete="username" placeholder="e.g. musai" oninput="checkAccountReady()"></label>
-        <label><span>Email</span><input id="regEmail" type="email" autocomplete="email" placeholder="you@example.com" oninput="checkAccountReady()"></label>
-        <label><span>Password</span><input id="regPassword" type="password" autocomplete="new-password" placeholder="At least 8 characters" oninput="checkAccountReady()"></label>
-        <label><span>Confirm password</span><input id="regPasswordConfirm" type="password" autocomplete="new-password" placeholder="Enter it again" oninput="checkAccountReady()"></label>
+        <label><span>Full name</span><input id="regName" name="name" autocomplete="name" placeholder="Your full name…" oninput="checkAccountReady()"></label>
+        <label><span>Username</span><input id="regUsername" name="username" autocomplete="username" placeholder="e.g. musai…" oninput="checkAccountReady()"></label>
+        <label><span>Email</span><input id="regEmail" name="email" type="email" autocomplete="email" spellcheck="false" placeholder="you@example.com…" oninput="checkAccountReady()"></label>
+        <label><span>Password</span><input id="regPassword" name="new-password" type="password" autocomplete="new-password" placeholder="At least 8 characters…" oninput="checkAccountReady()"></label>
+        <label><span>Confirm password</span><input id="regPasswordConfirm" name="confirm-password" type="password" autocomplete="new-password" placeholder="Enter it again…" oninput="checkAccountReady()"></label>
 
         <label class="auth-check-row">
           <input id="regTerms" type="checkbox" onchange="checkAccountReady()">
-          <span>I agree to the Terms and Privacy Policy.</span>
+          <span>I understand this creates only a demo profile in this browser.</span>
         </label>
 
         <div id="authReadyNote" class="auth-ready-note">✓ Your details look ready.</div>
         <button id="createAccountButton" class="btn blue auth-submit auth-create-hidden" onclick="registerUser()">Create account →</button>
 
-        <p class="form-note">Demo only: your profile and activity stay in this browser. This prototype does not create a real account. The separate Laravel build handles server-side authentication and password hashing.</p>
+        <p class="form-note">Demo only: your profile and activity stay in this browser. This prototype does not create a real account or send your password to a server.</p>
         <button class="btn ghost small" style="margin-top:12px" onclick="showScreen('home')">← Back home</button>
       </div>
     </main>
@@ -1148,7 +1154,7 @@ label span{display:block;margin-bottom:6px}
           </button>
           <button class="onboard-choice" type="button" onclick="showOnboardingPane('obJoin')">
             <div class="oc-icon">▦</div><b>Join with an invite</b>
-            <p>Enter an invite code shared by a community owner or admin. You can try WETALK26 in this prototype.</p>
+            <p>Try the sample invite code WETALK26 in this browser demo. It does not connect to a real community.</p>
           </button>
         </div>
         <div class="onboard-actions">
@@ -1227,10 +1233,10 @@ label span{display:block;margin-bottom:6px}
       <button class="navitem" onclick="openModal('joinModal')">▦ &nbsp; Join Community</button>
       <button class="navitem" onclick="openModal('qrModal')">⌁ &nbsp; Invite / QR</button>
       <button class="navitem" onclick="openLaunch()">✓ &nbsp; Launch Readiness</button>
-      <button class="navitem" onclick="openWeai()"><img class="weai-inline-logo" src="assets/image-c4c6e229384e.png" alt=""> WEAI Assistant</button>
+      <button class="navitem" onclick="openWeai()"><img class="weai-inline-logo" src="assets/image-c4c6e229384e.png" alt=""> WEAI Assistant (preview)</button>
       <div class="side-label">Communities</div>
       <div id="communityList" class="communities-list"></div>
-      <div class="sidebar-user"><div class="avatar" id="sideInitials">MI</div><div><b id="sideName" style="font-size:10px">Musa Ibrahim</b><small>● Online</small></div></div>
+      <div class="sidebar-user"><div class="avatar" id="sideInitials">MI</div><div><b id="sideName" style="font-size:10px">Musa Ibrahim</b><small>● Demo profile</small></div></div>
     </aside>
 
     <aside class="channels">
@@ -1251,44 +1257,45 @@ label span{display:block;margin-bottom:6px}
         </div>
       </div>
 
-      <section id="messages" class="messages"></section>
+      <section id="messages" class="messages" aria-live="polite" aria-relevant="additions"></section>
 
       <div class="composer-wrap">
         <div class="composer" style="grid-template-columns:auto auto 1fr auto">
-          <label class="attach" title="Attach file">📎<input id="fileInput" type="file" hidden onchange="attachFile(event)"></label>
-          <button class="attach" type="button" title="Ask WEAI" onclick="openAiForComposer()"><img src="assets/image-46d7fbd3c789.png" alt="WEAI" style="width:24px;height:24px;border-radius:7px;object-fit:cover"></button>
-          <input id="messageInput" placeholder="Type a message…" maxlength="10000" onkeydown="if(event.key==='Enter')sendMessage()">
+          <button class="attach" type="button" title="Preview a file name" aria-label="Choose a file for the demo" onclick="$('fileInput').click()"><span aria-hidden="true">📎</span></button>
+          <input id="fileInput" type="file" hidden aria-label="Choose a file for the demo" onchange="attachFile(event)">
+          <button class="attach" type="button" title="Ask WEAI" aria-label="Open WEAI preview" onclick="openAiForComposer()"><img src="assets/image-46d7fbd3c789.png" alt="" style="width:24px;height:24px;border-radius:7px;object-fit:cover"></button>
+          <input id="messageInput" name="message" aria-label="Message in current channel" placeholder="Type a demo message…" maxlength="10000" onkeydown="if(event.key==='Enter')sendMessage()">
           <button class="send" onclick="sendMessage()" aria-label="Send message">➤</button>
         </div>
       </div>
     </main>
 
     <aside class="rightbar">
-      <section class="right-card"><h3>Online Members (5)</h3>
-        <div class="member"><div class="avatar">MI</div><div><b>Musa Ibrahim</b><small>Online</small></div><span class="role">Admin</span></div>
-        <div class="member"><div class="avatar" style="background:linear-gradient(135deg,#ef3340,#ff7b72)">AB</div><div><b>Aisha Bello</b><small>Online</small></div><span class="role">Mod</span></div>
-        <div class="member"><div class="avatar" style="background:linear-gradient(135deg,#22a06b,#49c78f)">FA</div><div><b>Fatima Ali</b><small>Online</small></div><span class="role">Member</span></div>
+      <section class="right-card"><h3>Sample Members</h3>
+        <div class="member"><div class="avatar">MI</div><div><b>Musa Ibrahim</b><small>Sample profile</small></div><span class="role">Admin*</span></div>
+        <div class="member"><div class="avatar" style="background:linear-gradient(135deg,#ef3340,#ff7b72)">AB</div><div><b>Aisha Bello</b><small>Sample profile</small></div><span class="role">Mod*</span></div>
+        <div class="member"><div class="avatar" style="background:linear-gradient(135deg,#22a06b,#49c78f)">FA</div><div><b>Fatima Ali</b><small>Sample profile</small></div><span class="role">Member*</span></div>
       </section>
-      <section class="right-card"><h3>V1 Launch Readiness</h3><div class="launch-progress"><span></span></div><div style="display:flex;justify-content:space-between;font-size:9px;color:#7a889e;margin-top:6px"><span>Prototype coverage</span><b>82%</b></div>
+      <section class="right-card"><h3>Prototype Coverage</h3><div class="launch-progress"><span></span></div><div style="display:flex;justify-content:space-between;font-size:9px;color:#7a889e;margin-top:6px"><span>Illustrative UI preview</span><b>Demo</b></div>
         <div class="checklist" style="margin-top:10px">
           <div class="check"><i>✓</i><span>Homepage + dashboard</span></div>
-          <div class="check"><i>✓</i><span>Authentication flow</span></div>
-          <div class="check"><i>✓</i><span>Communities + channels</span></div>
-          <div class="check"><i>✓</i><span>Messages + file interface</span></div>
+          <div class="check"><i>✓</i><span>Demo onboarding UI</span></div>
+          <div class="check"><i>✓</i><span>Browser-local communities + channels</span></div>
+          <div class="check"><i>✓</i><span>Simulated messages + file-name preview</span></div>
           <div class="check"><i>✓</i><span>Responsive layout</span></div>
-          <div class="check"><i>○</i><span>Live server hosting</span></div>
-          <div class="check"><i>○</i><span>Multi-user testing</span></div>
-          <div class="check"><i>○</i><span>WEAI production verification</span></div>
+          <div class="check"><i>○</i><span>Real accounts + shared messaging</span></div>
+          <div class="check"><i>○</i><span>Actual file uploads + permissions</span></div>
+          <div class="check"><i>○</i><span>Live WEAI server connection</span></div>
         </div>
       </section>
-      <section class="right-card"><h3>System</h3><div class="metric"><span>Database</span><b>SQLite ready</b></div><div class="metric"><span>Live refresh</span><b>Prototype active</b></div><div class="metric"><span>OpenAI</span><b>Laravel linked</b></div></section>
+      <section class="right-card"><h3>Demo Environment</h3><div class="metric"><span>Data storage</span><b>Browser only</b></div><div class="metric"><span>Messaging</span><b>Simulated</b></div><div class="metric"><span>WEAI</span><b>Not connected</b></div></section>
     </aside>
   </div>
 </section>
 
 <!-- Create community -->
-<div class="modal" id="communityModal"><div class="modal-box">
-  <div class="modal-head"><h2>Create community</h2><button class="close" onclick="closeModal('communityModal')">✕</button></div>
+<div class="modal" id="communityModal"><div class="modal-box" role="dialog" aria-modal="true" aria-label="Create community">
+  <div class="modal-head"><h2>Create community</h2><button class="close" aria-label="Close create community dialog" onclick="closeModal('communityModal')">✕</button></div>
   <p class="modal-sub">Create a school, team, organization, gaming group or general community.</p>
   <label><span>Community name</span><input id="newCommunityName" placeholder="e.g. Greenfield University"></label>
   <label><span>Description</span><textarea id="newCommunityDesc" rows="3" placeholder="What is this community for?"></textarea></label>
@@ -1297,8 +1304,8 @@ label span{display:block;margin-bottom:6px}
 </div></div>
 
 <!-- Create channel -->
-<div class="modal" id="channelModal"><div class="modal-box">
-  <div class="modal-head"><h2>Create channel</h2><button class="close" onclick="closeModal('channelModal')">✕</button></div>
+<div class="modal" id="channelModal"><div class="modal-box" role="dialog" aria-modal="true" aria-label="Create channel">
+  <div class="modal-head"><h2>Create channel</h2><button class="close" aria-label="Close create channel dialog" onclick="closeModal('channelModal')">✕</button></div>
   <p class="modal-sub">Organize a community into focused conversations.</p>
   <label><span>Channel name</span><input id="newChannelName" placeholder="announcements"></label>
   <label><span>Description</span><input id="newChannelDesc" placeholder="Important community updates"></label>
@@ -1306,32 +1313,32 @@ label span{display:block;margin-bottom:6px}
 </div></div>
 
 <!-- Join -->
-<div class="modal" id="joinModal"><div class="modal-box">
-  <div class="modal-head"><h2>Join community</h2><button class="close" onclick="closeModal('joinModal')">✕</button></div>
-  <p class="modal-sub">Enter an invite code. Try <b>WETALK26</b> in this prototype.</p>
+<div class="modal" id="joinModal"><div class="modal-box" role="dialog" aria-modal="true" aria-label="Join community">
+  <div class="modal-head"><h2>Join community</h2><button class="close" aria-label="Close join community dialog" onclick="closeModal('joinModal')">✕</button></div>
+  <p class="modal-sub">Enter a demo invite code. Try <b>WETALK26</b> in this browser; it will not add a real community.</p>
   <label><span>Invite code</span><input id="joinCode" placeholder="WETALK26"></label>
   <div class="modal-actions"><button class="btn ghost small" onclick="closeModal('joinModal')">Cancel</button><button class="btn blue small" onclick="joinCommunity()">Join</button></div>
 </div></div>
 
 <!-- QR -->
-<div class="modal" id="qrModal"><div class="modal-box large">
-  <div class="modal-head"><h2>Invite people</h2><button class="close" onclick="closeModal('qrModal')">✕</button></div>
-  <p class="modal-sub">Share the code or invite link. The QR image below is a visual prototype; the invite code itself works inside this demo.</p>
+<div class="modal" id="qrModal"><div class="modal-box large" role="dialog" aria-modal="true" aria-label="Demo invite details">
+  <div class="modal-head"><h2>Demo invite details</h2><button class="close" aria-label="Close invite details dialog" onclick="closeModal('qrModal')">✕</button></div>
+  <p class="modal-sub">Try the invite code inside this browser demo. The displayed invite URL and QR image are mockups and cannot invite other people.</p>
   <div class="qr-wrap">
     <div id="qrGrid" class="qr"></div>
-    <div><span class="badge green">Community invite</span><div class="invite-code" id="inviteCode">WETALK26</div><p class="modal-sub">Members can enter this code from the Join Community panel.</p><div class="copy-row"><input id="inviteLink" readonly value="https://wetalk.ng/join/WETALK26"><button class="btn blue small" onclick="copyInvite()">Copy</button></div></div>
+    <div><span class="badge green">Demo invite code</span><div class="invite-code" id="inviteCode">WETALK26</div><p class="modal-sub">Enter this code in the Join Community panel in this browser. It is not a real invite.</p><div class="copy-row"><input id="inviteLink" aria-label="Demo invite code" readonly value="WETALK26"><button class="btn blue small" onclick="copyInvite()">Copy code</button></div></div>
   </div>
 </div></div>
 
 <!-- Launch / deploy -->
-<div class="modal" id="launchModal"><div class="modal-box large">
-  <div class="modal-head"><h2>V1 Launch Readiness</h2><button class="close" onclick="closeModal('launchModal')">✕</button></div>
-  <p class="modal-sub">This panel turns the launch checklist into a visible part of the prototype. Production server deployment still has to be performed and verified on the real Laravel application.</p>
+<div class="modal" id="launchModal"><div class="modal-box large" role="dialog" aria-modal="true" aria-label="Prototype coverage and launch requirements">
+  <div class="modal-head"><h2>Prototype Coverage & Launch Requirements</h2><button class="close" aria-label="Close prototype coverage dialog" onclick="closeModal('launchModal')">✕</button></div>
+  <p class="modal-sub">This is a prototype checklist, not a production readiness report. This static page has no real backend, authentication, file uploads, permissions or live AI connection.</p>
   <div class="launch-grid">
-    <div class="launch-card"><h3>Core product</h3><div class="status-list"><div class="status-row"><span>Homepage</span><b class="ok">Ready</b></div><div class="status-row"><span>Registration / login</span><b class="ok">Prototype ready</b></div><div class="status-row"><span>Communities</span><b class="ok">Ready</b></div><div class="status-row"><span>Channels</span><b class="ok">Ready</b></div><div class="status-row"><span>Messages</span><b class="ok">Ready</b></div><div class="status-row"><span>File upload UI</span><b class="ok">Ready</b></div></div></div>
-    <div class="launch-card"><h3>Infrastructure</h3><div class="status-list"><div class="status-row"><span>SQLite dev database</span><b class="ok">Configured</b></div><div class="status-row"><span>Responsive mobile UI</span><b class="ok">Ready</b></div><div class="status-row"><span>OpenAI backend</span><b class="ok">Linked</b></div><div class="status-row"><span>Production domain</span><b class="warn">Needs deploy</b></div><div class="status-row"><span>HTTPS + server checks</span><b class="warn">Needs verification</b></div></div></div>
-    <div class="launch-card"><h3>Security check</h3><div class="status-list"><div class="status-row"><span>Passwords</span><b class="ok">Server hashed</b></div><div class="status-row"><span>CSRF protection</span><b class="ok">Laravel</b></div><div class="status-row"><span>API key exposure</span><b class="ok">Server-side only</b></div><div class="status-row"><span>Upload validation</span><b class="warn">Final audit</b></div><div class="status-row"><span>Permissions / roles</span><b class="warn">Final audit</b></div></div></div>
-    <div class="launch-card"><h3>Launch target</h3><p>Complete the real server deployment, test two separate accounts, test mobile, verify file permissions and remove any homepage claims for features not yet fully implemented.</p><button class="btn blue small" onclick="toast('Launch checklist saved to prototype')">Mark reviewed</button></div>
+    <div class="launch-card"><h3>Interactive demo</h3><div class="status-list"><div class="status-row"><span>Responsive homepage</span><b class="ok">Available</b></div><div class="status-row"><span>Onboarding UI</span><b class="ok">Simulated</b></div><div class="status-row"><span>Communities + channels</span><b class="ok">Local only</b></div><div class="status-row"><span>Messages</span><b class="ok">Simulated</b></div><div class="status-row"><span>Attachments</span><b class="ok">Filename only</b></div><div class="status-row"><span>Invite QR / URL</span><b class="warn">Mockup</b></div></div></div>
+    <div class="launch-card"><h3>Not connected</h3><div class="status-list"><div class="status-row"><span>Real accounts</span><b class="warn">Not available</b></div><div class="status-row"><span>Shared database</span><b class="warn">Not available</b></div><div class="status-row"><span>Live messaging</span><b class="warn">Not available</b></div><div class="status-row"><span>File uploads</span><b class="warn">Not available</b></div><div class="status-row"><span>WEAI responses</span><b class="warn">Server required</b></div></div></div>
+    <div class="launch-card"><h3>Production requirements</h3><div class="status-list"><div class="status-row"><span>Authentication + password handling</span><b class="warn">Not assessed</b></div><div class="status-row"><span>Authorization + roles</span><b class="warn">Not assessed</b></div><div class="status-row"><span>Upload validation + storage</span><b class="warn">Not assessed</b></div><div class="status-row"><span>AI privacy + server controls</span><b class="warn">Not assessed</b></div><div class="status-row"><span>HTTPS + operational checks</span><b class="warn">Not assessed</b></div></div></div>
+    <div class="launch-card"><h3>Share feedback</h3><p>Tell us what worked, what was confusing and which device/browser you used. Please do not include passwords, private messages or other sensitive information; reports are public GitHub issues.</p><a class="btn blue small" href="https://github.com/Feez101/wetalk_v1_prototype/issues/new?template=demo-feedback.yml" target="_blank" rel="noopener noreferrer">Open feedback form</a></div>
   </div>
 </div></div>
 
@@ -1348,13 +1355,13 @@ label span{display:block;margin-bottom:6px}
       <nav class="weai-landing-nav">
         <a class="weai-landing-brand" href="#" onclick="return false"><img src="assets/image-46d7fbd3c789.png" alt="WEAI logo"><span>WEAI</span></a>
         <div class="weai-landing-links"><button type="button" onclick="toast('Chat, writing, summaries and ideas')">Capabilities</button><button type="button" onclick="toast('Built into your WeTalk communities')">Use cases</button><button type="button" onclick="toast('You control what context WEAI receives')">Safety</button></div>
-        <div class="weai-landing-actions"><button type="button" onclick="showWeaiChat()">Log in</button><button class="primary" type="button" onclick="showWeaiChat()">Try WEAI</button></div>
+        <div class="weai-landing-actions"><button type="button" onclick="showWeaiChat()">Open chat preview</button><button class="primary" type="button" onclick="showWeaiChat()">Try WEAI preview</button></div>
       </nav>
       <main class="weai-landing-main">
         <p class="weai-landing-kicker">Think. Create. Discover.</p>
         <h2>Every question.<br>One <span class="blue">assistant.</span><br><span class="purple">WEAI.</span></h2>
         <p class="weai-landing-copy">Chat, improve messages, create announcements, summarize selected text and turn community ideas into something useful—all from one helpful assistant inside WeTalk.</p>
-        <div class="weai-landing-cta"><button class="primary" type="button" onclick="showWeaiChat()">Start chatting →</button><button type="button" onclick="toast('WEAI helps with writing, summaries and community ideas')">Explore capabilities</button></div>
+        <div class="weai-landing-cta"><button class="primary" type="button" onclick="showWeaiChat()">Open chat preview →</button><button type="button" onclick="toast('WEAI preview: writing, summaries and community ideas')">Explore capabilities</button></div>
         <div class="weai-landing-cards"><div class="weai-landing-card"><b>Fast</b><span>Helpful answers in seconds</span></div><div class="weai-landing-card"><b>Community-ready</b><span>Messages, summaries and ideas</span></div><div class="weai-landing-card"><b>Inside WeTalk</b><span>Available from your dashboard</span></div></div>
       </main>
     </div>
@@ -1402,12 +1409,12 @@ label span{display:block;margin-bottom:6px}
         <textarea id="weaiPrompt" rows="1" placeholder="Message WEAI…" onkeydown="weaiKeydown(event)"></textarea>
         <button class="weai-send" type="button" onclick="sendWeai()">➤</button>
       </div>
-      <p class="weai-disclaimer">AI can make mistakes. Review important details before posting.</p>
+      <p class="weai-disclaimer">Live AI is disabled on this public demo. Your prompt and context are not sent; review any AI output before sharing when using a connected service.</p>
     </div>
   </section>
 </div>
 
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 </div>
 
 <script>
@@ -1452,6 +1459,9 @@ function showScreen(name){
   ['home','auth','weaiGuide','onboarding','dashboard'].forEach(x=>$(x+'Screen').classList.toggle('hidden',x!==name));
   window.scrollTo(0,0);
   if(name==='dashboard') renderDashboard();
+}
+function enterDemo(){
+  showScreen('dashboard');
 }
 function openAuth(){
   showScreen('auth');
@@ -1576,11 +1586,11 @@ function renderDashboard(){
   $('topName').textContent=u.name;$('topUsername').textContent='@'+u.username;$('topInitials').textContent=initials(u.name);$('sideInitials').textContent=initials(u.name);$('sideName').textContent=u.name;
   const community=currentCommunity(); if(!community)return;
   $('workspaceName').textContent=community.name;
-  $('communityList').innerHTML=state.communities.map(c=>`<div class="community-item ${c.id===community.id?'active':''}" onclick="switchCommunity(${c.id})"><span class="c-dot">${initials(c.name)}</span><span>${escapeHtml(c.name)}</span></div>`).join('');
-  $('channelList').innerHTML=community.channels.map(ch=>`<div class="channel ${ch.id===state.currentChannel?'active':''}" onclick="switchChannel(${ch.id})"><b>#</b><span>${escapeHtml(ch.name)}</span></div>`).join('');
+  $('communityList').innerHTML=state.communities.map(c=>`<button type="button" class="community-item ${c.id===community.id?'active':''}" aria-pressed="${c.id===community.id}" onclick="switchCommunity(${c.id})"><span class="c-dot">${escapeHtml(initials(c.name))}</span><span>${escapeHtml(c.name)}</span></button>`).join('');
+  $('channelList').innerHTML=community.channels.map(ch=>`<button type="button" class="channel ${ch.id===state.currentChannel?'active':''}" aria-pressed="${ch.id===state.currentChannel}" onclick="switchChannel(${ch.id})"><b aria-hidden="true">#</b><span>${escapeHtml(ch.name)}</span></button>`).join('');
   const channel=currentChannel();
   $('channelTitle').textContent='# '+channel.name;$('channelDesc').textContent=channel.desc||'Community channel';
-  $('inviteCode').textContent=community.invite;$('inviteLink').value='https://wetalk.ng/join/'+community.invite;
+  $('inviteCode').textContent=community.invite;$('inviteLink').value=community.invite;
   renderMessages();generateQr(community.invite);
 }
 function renderMessages(filter=''){
@@ -1638,9 +1648,16 @@ function closeModal(id){$(id).classList.remove('open')}
 function openLaunch(){openModal('launchModal')}
 function toggleSidebar(){$('sidebar').classList.toggle('open')}
 function copyInvite(){
-  const text=$('inviteLink').value;
-  if(navigator.clipboard)navigator.clipboard.writeText(text);
-  toast('Invite link copied');
+  copyText($('inviteLink').value,'Demo invite code copied');
+}
+async function copyText(text,successMessage){
+  if(!navigator.clipboard){toast('Clipboard access is unavailable in this browser');return}
+  try{
+    await navigator.clipboard.writeText(text);
+    toast(successMessage);
+  }catch{
+    toast('Could not access the clipboard; select and copy the text instead');
+  }
 }
 function generateQr(seed){
   let v=0;for(const ch of seed)v=(v*31+ch.charCodeAt(0))>>>0;
@@ -1739,7 +1756,7 @@ function weaiAddMessage(role,text,actions=false){
     action.className='weai-answer-actions';
     action.innerHTML='<button type="button">Copy</button><button type="button">Insert into message</button>';
     const buttons=action.querySelectorAll('button');
-    buttons[0].onclick=()=>{if(navigator.clipboard)navigator.clipboard.writeText(text);toast('WEAI answer copied')};
+    buttons[0].onclick=()=>copyText(text,'WEAI answer copied');
     buttons[1].onclick=()=>{$('messageInput').value=text;closeWeai();$('messageInput').focus()};
     body.appendChild(action);
   }
@@ -1763,6 +1780,10 @@ async function sendWeai(){
 
   const context=$('weaiContext').value.trim();
   const userContent=context ? `${prompt}\n\nUser-selected context:\n${context}` : prompt;
+  if(location.hostname==='feez101.github.io'){
+    weaiAddMessage('bot','Live WEAI is disabled on this public demo. Your prompt and selected context were not sent.');
+    return;
+  }
   weaiConversation.push({role:'user',content:userContent});
   try{
     const response=await fetch('/api/chat/stream',{
@@ -1808,7 +1829,7 @@ async function sendWeai(){
     actions.className='weai-answer-actions';
     actions.innerHTML='<button type="button">Copy</button><button type="button">Insert into message</button>';
     const buttons=actions.querySelectorAll('button');
-    buttons[0].onclick=()=>{if(navigator.clipboard)navigator.clipboard.writeText(answer);toast('WEAI answer copied')};
+    buttons[0].onclick=()=>copyText(answer,'WEAI answer copied');
     buttons[1].onclick=()=>{$('messageInput').value=answer;closeWeai();$('messageInput').focus()};
     body.appendChild(actions);
   }catch(error){

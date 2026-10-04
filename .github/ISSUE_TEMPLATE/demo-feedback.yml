@@ -1,0 +1,42 @@
+name: WeTalk demo feedback
+description: Share feedback about the public, browser-only prototype
+title: "[Demo feedback]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for trying the WeTalk prototype. Reports are public GitHub issues, so do not include passwords, private messages, personal contact details, or other sensitive information.
+  - type: dropdown
+    id: feedback_type
+    attributes:
+      label: What kind of feedback is this?
+      options:
+        - Something did not work
+        - Something was confusing
+        - Accessibility or mobile feedback
+        - Feature idea
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: What happened or what would you change?
+      description: Please describe the steps you took and what you expected.
+      placeholder: I opened the demo dashboard and…
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and device
+      description: This helps reproduce visual or interaction issues.
+      placeholder: e.g. Chrome on Windows 11
+    validations:
+      required: false
+  - type: input
+    id: page
+    attributes:
+      label: Which page or demo flow?
+      placeholder: e.g. Dashboard, onboarding, WEAI preview
+    validations:
+      required: false
