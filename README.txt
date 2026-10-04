@@ -16,3 +16,6 @@ This is a visual prototype. Information is stored only in the browser. Live WEAI
 
 Sharing:
 You can publish this folder as a static website to let others view and try the demo. Each visitor gets separate browser-local demo data; publishing it does not connect the real server features. Keep the assets folder alongside index.html.
+
+Public demo:
+https://feez101.github.io/wetalk_v1_prototype/

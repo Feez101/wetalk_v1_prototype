@@ -1772,7 +1772,10 @@ async function sendWeai(){
     });
     if(!response.ok){
       const detail=await response.json().catch(()=>({}));
-      throw new Error(detail.error||'WEAI could not answer right now.');
+      const fallback=response.status===404
+        ? 'Live WEAI is not connected in this hosted prototype; it needs the separate WeTalk server.'
+        : 'WEAI could not answer right now.';
+      throw new Error(detail.error||fallback);
     }
     if(!response.body)throw new Error('Live responses are unavailable in this browser.');
     const reader=response.body.getReader();
